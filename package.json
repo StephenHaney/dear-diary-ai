@@ -11,7 +11,8 @@
     "@magenta/music": "^1.19.0",
     "next": "9.5.2",
     "react": "16.13.1",
-    "react-dom": "16.13.1"
+    "react-dom": "16.13.1",
+    "tone": "^14.7.39"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",

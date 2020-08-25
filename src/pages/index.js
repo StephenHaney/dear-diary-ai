@@ -21,6 +21,8 @@ export default function Home() {
             margin: 0;
             overscroll-behavior: none;
             font-family: Lora;
+            width: 100vw;
+            height: 100vh;
           }
           `}</style>
       </Head>
