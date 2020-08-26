@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "@magenta/music": "^1.19.0",
+    "apos-to-lex-form": "^1.0.5",
+    "natural": "^2.1.5",
     "next": "9.5.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "spelling-corrector": "^3.0.0",
+    "stopword": "^1.0.1",
     "tone": "^14.7.39"
   },
   "devDependencies": {
