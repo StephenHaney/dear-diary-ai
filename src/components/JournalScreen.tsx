@@ -113,7 +113,7 @@ const JournalScreen = () => {
             sampler.triggerAttackRelease([nextNote], 4, undefined, velocity);
 
             // Hide a new svg cover every N keystrokes:
-            const coverCount = Math.floor(treeIndex.current / 7);
+            const coverCount = Math.floor(treeIndex.current / 6);
             if (coverCount > 21) {
               // We've gone too far, head back!
               treeIndex;
