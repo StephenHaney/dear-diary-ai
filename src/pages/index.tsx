@@ -19,6 +19,7 @@ export default function Home() {
     `Take a breath`,
     `Time will keep flowing`,
     `When can I get my hair cut?`,
+    `Let's adopt a dog`,
     `Let it all out`,
   ];
 
@@ -48,9 +49,12 @@ export default function Home() {
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
 
+    // Stop the button text from changing
+    clearInterval((window as any).buttonInterval);
+
     setTimeout(() => {
       loadingCoverRef.current!.style.display = 'none';
-      // Don't do this, use a ref, just moving fast for the JAM:
+      // Don't do this, use a ref, just moving fast for the JAM! since forwardRef is being weird
       document.querySelector('textarea')?.focus();
     }, 550);
   }
@@ -99,7 +103,7 @@ export default function Home() {
       <audio ref={windRef} loop={true}>
         <source src="/wind-birbs.mp3" type="audio/mpeg" />
       </audio>
-      <JournalScreen ref={journalTextRef} />
+      <JournalScreen />
     </>
   );
 }

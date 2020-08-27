@@ -33,25 +33,28 @@ const silentKeys: Record<string, boolean> = {
   ArrowRight: false,
 };
 
-const chords: Record<string, number[]> = {
-  Am: [57, 64, 79],
+const chords: Record<string, string[]> = {
+  Am: ['A3', 'E4', 'G5'],
 };
-const chordKeys: Record<string, number[]> = {
-  '.': chords.Am, // A3 E4 G5
+const chordKeys: Record<string, string[]> = {
+  '.': chords.Am,
 };
 
 const JournalScreen = () => {
-  const currentIndex = useRef(0);
-  const totalCount = useRef(0);
+  const noteIndex = useRef(0);
+  const treeIndex = useRef(0);
+  const treeCoverOpacityChange = useRef('0');
 
   return (
     <>
       <textarea
         style={{
+          position: 'relative',
+          zIndex: 3,
           boxSizing: 'border-box',
           height: '99vh',
           width: '100%',
-          maxWidth: '600px',
+          maxWidth: '700px',
           fontSize: '30px',
           border: 0,
           resize: 'none',
@@ -61,6 +64,7 @@ const JournalScreen = () => {
           paddingBottom: '60px',
           paddingLeft: '60px',
           paddingRight: '30px',
+          backgroundColor: 'rgba(255, 255, 255, 0.5)',
         }}
         placeholder="How are you feeling?"
         onChange={(e) => {
@@ -68,22 +72,22 @@ const JournalScreen = () => {
           const lastCharacter = newValue[newValue.length - 1];
           if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
             // Score the text
-            fetch('/api/sentiment', {
-              method: 'post',
-              body: JSON.stringify({
-                sample: e.currentTarget.value,
-              }),
-            }).then((res) => {
-              if (res.status === 200) {
-                try {
-                  res.json().then((result) => {
-                    console.log(result);
-                  });
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            });
+            // fetch('/api/sentiment', {
+            //   method: 'post',
+            //   body: JSON.stringify({
+            //     sample: e.currentTarget.value,
+            //   }),
+            // }).then((res) => {
+            //   if (res.status === 200) {
+            //     try {
+            //       res.json().then((result) => {
+            //         console.log(result);
+            //       });
+            //     } catch (e) {
+            //       console.log(e);
+            //     }
+            //   }
+            // });
           }
         }}
         onKeyDown={(e) => {
@@ -96,27 +100,40 @@ const JournalScreen = () => {
           const chord = chordKeys[e.key];
           if (chord) {
             // Play a chord for this key
-            for (const note of chord) {
-              // TODO
-            }
+            sampler.triggerAttackRelease(chord, 2, undefined, 0.25);
           } else {
             // Play the next note in the sequence
-            const nextKey = melodies[1].notes![currentIndex.current];
+            const nextKey = melodies[1].notes![noteIndex.current];
             const nextNote = toNote(nextKey.pitch!);
-            sampler.triggerAttackRelease([nextNote], 4, undefined, 0.2);
 
-            // Hide a new svg cover every 5 keystrokes:
-            const coverCount = Math.floor(totalCount.current / 5);
+            // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
+            const velocity = Math.max(Math.min(Math.random() / 2, 0.2), 0.1);
+            sampler.triggerAttackRelease([nextNote], 4, undefined, velocity);
+
+            // Hide a new svg cover every N keystrokes:
+            const coverCount = Math.floor(treeIndex.current / 7);
+            if (coverCount > 21) {
+              // We've gone too far, head back!
+              treeIndex;
+            }
             const treeBranch = document.querySelector('#cover-' + coverCount) as SVGElement;
             if (treeBranch) {
               treeBranch.style.transition = 'opacity 0.5s ease-in';
-              treeBranch.style.opacity = '0';
+              treeBranch.style.opacity = treeCoverOpacityChange.current;
+            }
+            if (coverCount === 21) {
+              // We've hit the end of the tree, start over
+              treeIndex.current = 0;
+              treeCoverOpacityChange.current = treeCoverOpacityChange.current === '1' ? '0' : '1';
             }
 
-            totalCount.current += 1;
-            currentIndex.current += 1;
-            if (currentIndex.current === melodies[1].notes!.length) {
-              currentIndex.current = 0;
+            // +/- 1 to the tree index
+            treeIndex.current += 1;
+            // +1 to the note index
+            noteIndex.current += 1;
+            if (noteIndex.current === melodies[1].notes!.length) {
+              // Restart the melody if we've run out of notes
+              noteIndex.current = 0;
             }
           }
         }}
@@ -128,15 +145,3 @@ const JournalScreen = () => {
 };
 
 export default JournalScreen;
-
-/*
-- chords for certain keys
-- interpolate real melodies
-- bounce around based on sentiment score
-- updating URL on key change
-- add logrocket and GA
-- about us icon / modal
-- playback mode
-- shoot video (each)
-- double check Safari bug
-*/
