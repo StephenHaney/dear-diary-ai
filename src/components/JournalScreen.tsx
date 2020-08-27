@@ -38,6 +38,8 @@ const chords: Record<string, string[]> = {
 };
 const chordKeys: Record<string, string[]> = {
   '.': chords.Am,
+  '!': chords.Am,
+  '?': chords.Am,
 };
 
 const JournalScreen = () => {
