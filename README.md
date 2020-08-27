@@ -1,30 +1,43 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Hello
 
-## Getting Started
+We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using the Magenta MusicVAE ML model. As you write, you build your own visual and musical story.
 
-First, run the development server:
+Visit <TBD> to experience the newest deploy.
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Contributors:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+- Stephen Haney – https://twitter.com/sdothaney
+- Suyash Joshi – https://twitter.com/suyashcjoshi
+- Devin Lane – https://twitter.com/gentle_return
 
-## Learn More
+### Prior art:
 
-To learn more about Next.js, take a look at the following resources:
+Jazz Keys: https://jazzkeys.plan8.co/
+Magenta-js: https://github.com/magenta/magenta-js
+Tone.js: https://tonejs.github.io/
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Credit:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Journal tree:
+http://clipart-library.com/clip-art/tree-silhouette-svg-25.htm
 
-## Deploy on Vercel
+Loading tree:
+https://svgsilh.com/image/2013419.html
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/import?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Excellent tutorial on MusicVAE:
+https://medium.com/@torinblankensmith/melody-mixer-using-deeplearn-js-to-mix-melodies-in-the-browser-8ad5b42b4d0b
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Fantastic tutorial on Magenta-js in general:
+https://hello-magenta.glitch.me/
+
+### Codebase instructions
+
+#### To generate sequences:
+
+To generate sequences, navigate to /generate-melodies. This will interpolate the two seed sequences and output the results to the browser console. You can then update /src/sequences.json with the output, which will be consumed by the app on the next deploy.
+
+#### To convert from a midi file to INoteSequence:
+
+Place your .mid file in the public folder and manually update /src/components/MidiConvert.tsx to point at the right path. Then navigate to /midi-convert in your browser. Check the console for the sequence version.

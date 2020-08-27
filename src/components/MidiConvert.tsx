@@ -3,7 +3,7 @@ import * as mm from '@magenta/music/es6';
 
 const MidiConvert = () => {
   useEffect(() => {
-    const sequence = mm.urlToNoteSequence('/sad.mid').then((sequence) => console.log(sequence));
+    const sequence = mm.urlToNoteSequence('/sad.mid').then((sequence) => console.log(JSON.stringify(sequence)));
   }, []);
 
   return <div>Check the console</div>;
