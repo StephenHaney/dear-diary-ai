@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, forwardRef } from 'react';
 import * as Tone from 'tone';
 import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
+import { resolveHref } from 'next/dist/next-server/lib/router/router';
 
 const sampler = new Tone.Sampler({
   urls: {
@@ -40,14 +41,11 @@ const chordKeys: Record<string, number[]> = {
   '.': chords.Am, // A3 E4 G5
 };
 
-const JournalScreen = () => {
+const JournalScreen = React.forwardRef<HTMLTextAreaElement>((props, ref) => {
   const currentIndex = useRef(0);
   const totalCount = useRef(0);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    textareaRef.current?.focus();
-
     // const lowerVolume = new Tone.Volume(-32).toDestination();
     const ambience = new Tone.Player('/wind-birbs.mp3').toDestination();
     ambience.volume.value = -12;
@@ -59,7 +57,7 @@ const JournalScreen = () => {
   return (
     <>
       <textarea
-        ref={textareaRef}
+        ref={ref}
         style={{
           boxSizing: 'border-box',
           height: '99vh',
@@ -138,6 +136,6 @@ const JournalScreen = () => {
       <Tree />
     </>
   );
-};
+});
 
 export default JournalScreen;

@@ -9,6 +9,7 @@ export default function Home() {
 
   const loadingCoverRef = useRef<HTMLDivElement>(null);
   const windRef = useRef<HTMLAudioElement>(null);
+  const journalTextRef = useRef<HTMLTextAreaElement>(null);
 
   function handleStartClick() {
     windRef.current!.play();
@@ -18,6 +19,9 @@ export default function Home() {
 
     setTimeout(() => {
       loadingCoverRef.current!.style.display = 'none';
+
+      console.log(journalTextRef.current);
+      // journalTextRef.current?.focus();
     }, 550);
   }
 
@@ -77,10 +81,10 @@ export default function Home() {
           Enter the forest
         </button>
       </div>
-      <audio ref={windRef} loop={true}>
+      <audio ref={windRef} loop={true} autoPlay={false}>
         <source src="/wind-birbs.mp3" type="audio/mpeg" />
       </audio>
-      <JournalScreen />
+      <JournalScreen ref={journalTextRef} />
     </>
   );
 }
