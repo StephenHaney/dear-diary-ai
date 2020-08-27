@@ -3,7 +3,6 @@ import * as Tone from 'tone';
 import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
-import { resolveHref } from 'next/dist/next-server/lib/router/router';
 
 const sampler = new Tone.Sampler({
   urls: {
@@ -41,23 +40,13 @@ const chordKeys: Record<string, number[]> = {
   '.': chords.Am, // A3 E4 G5
 };
 
-const JournalScreen = React.forwardRef<HTMLTextAreaElement>((props, ref) => {
+const JournalScreen = () => {
   const currentIndex = useRef(0);
   const totalCount = useRef(0);
-
-  useEffect(() => {
-    // const lowerVolume = new Tone.Volume(-32).toDestination();
-    const ambience = new Tone.Player('/wind-birbs.mp3').toDestination();
-    ambience.volume.value = -12;
-    // ambience.loop = true;
-    // play as soon as the buffer is loaded
-    ambience.autostart = true;
-  }, []);
 
   return (
     <>
       <textarea
-        ref={ref}
         style={{
           boxSizing: 'border-box',
           height: '99vh',
@@ -70,10 +59,10 @@ const JournalScreen = React.forwardRef<HTMLTextAreaElement>((props, ref) => {
           color: '#333',
           paddingTop: '60px',
           paddingBottom: '60px',
-          paddingLeft: '30px',
+          paddingLeft: '60px',
           paddingRight: '30px',
         }}
-        placeholder="Tell me your story"
+        placeholder="How are you feeling?"
         onChange={(e) => {
           const newValue = e.currentTarget.value;
           const lastCharacter = newValue[newValue.length - 1];
@@ -136,6 +125,18 @@ const JournalScreen = React.forwardRef<HTMLTextAreaElement>((props, ref) => {
       <Tree />
     </>
   );
-});
+};
 
 export default JournalScreen;
+
+/*
+- chords for certain keys
+- interpolate real melodies
+- bounce around based on sentiment score
+- updating URL on key change
+- add logrocket and GA
+- about us icon / modal
+- playback mode
+- shoot video (each)
+- double check Safari bug
+*/

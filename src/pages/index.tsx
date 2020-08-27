@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
 export default function Home() {
   const JournalScreen = dynamic(() => import('../components/JournalScreen'), {
@@ -10,45 +10,58 @@ export default function Home() {
   const loadingCoverRef = useRef<HTMLDivElement>(null);
   const windRef = useRef<HTMLAudioElement>(null);
   const journalTextRef = useRef<HTMLTextAreaElement>(null);
+  const headlineRef = useRef<HTMLHeadingElement>(null);
+
+  const startMessages = [
+    `So tell me a story`,
+    `Journal. It will help.`,
+    `Take a moment`,
+    `Take a breath`,
+    `Time will keep flowing`,
+    `When can I get my hair cut?`,
+    `Let it all out`,
+  ];
+
+  useEffect(() => {
+    let messageCounter = 1;
+    clearInterval((window as any).buttonInterval);
+    (window as any).buttonInterval = setInterval(() => {
+      const newMessage = startMessages[messageCounter];
+
+      headlineRef.current!.innerText = newMessage;
+
+      messageCounter = messageCounter + 1;
+      if (messageCounter > startMessages.length - 1) {
+        messageCounter = 0;
+      }
+    }, 2600);
+
+    // Clean up
+    return () => {
+      clearInterval((window as any).buttonInterval);
+    };
+  }, []);
 
   function handleStartClick() {
     windRef.current!.play();
-    windRef.current!.volume = 0.3;
+    windRef.current!.volume = 0.15;
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
 
     setTimeout(() => {
       loadingCoverRef.current!.style.display = 'none';
-
-      console.log(journalTextRef.current);
-      // journalTextRef.current?.focus();
+      // Don't do this, use a ref, just moving fast for the JAM:
+      document.querySelector('textarea')?.focus();
     }, 550);
   }
 
   return (
     <>
       <Head>
-        <title>One Story, One Song</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="theme-color" content="#000000" />
-        <meta name="google" content="notranslate" />
-        <link rel="icon" href="/favicon.ico" />
-        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@432&display=swap" rel="stylesheet" />
-
-        <style>{`
-          body {
-            margin: 0;
-            overscroll-behavior: none;
-            font-family: Lora;
-            width: 100vw;
-            height: 100vh;
-          }
-          `}</style>
+        <title>So tell me a story</title>
       </Head>
-
       <div
         ref={loadingCoverRef}
-        onClick={handleStartClick}
         style={{
           position: 'fixed',
           zIndex: 5,
@@ -63,7 +76,9 @@ export default function Home() {
           flexDirection: 'column',
         }}
       >
+        <h1 ref={headlineRef}>{startMessages[0]}</h1>
         <button
+          onClick={handleStartClick}
           style={{
             marginTop: '30px',
             outline: 'none',
@@ -72,16 +87,16 @@ export default function Home() {
             padding: '20px',
             paddingLeft: '40px',
             paddingRight: '40px',
-            fontSize: '40px',
+            fontSize: '20px',
             borderRadius: '50px',
             opacity: '0.8',
             cursor: 'pointer',
           }}
         >
-          Enter the forest
+          Begin
         </button>
       </div>
-      <audio ref={windRef} loop={true} autoPlay={false}>
+      <audio ref={windRef} loop={true}>
         <source src="/wind-birbs.mp3" type="audio/mpeg" />
       </audio>
       <JournalScreen ref={journalTextRef} />

@@ -2,7 +2,7 @@
 
 We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using the Magenta MusicVAE ML model. As you write, you build your own visual and musical story.
 
-Visit <TBD> to experience the newest deploy.
+Visit tellmeyourstory.ai to experience the newest deploy.
 
 ---
 
@@ -23,9 +23,6 @@ Tone.js: https://tonejs.github.io/
 Journal tree:
 http://clipart-library.com/clip-art/tree-silhouette-svg-25.htm
 
-Loading tree:
-https://svgsilh.com/image/2013419.html
-
 Excellent tutorial on MusicVAE:
 https://medium.com/@torinblankensmith/melody-mixer-using-deeplearn-js-to-mix-melodies-in-the-browser-8ad5b42b4d0b
 
@@ -41,3 +38,12 @@ To generate sequences, navigate to /generate-melodies. This will interpolate the
 #### To convert from a midi file to INoteSequence:
 
 Place your .mid file in the public folder and manually update /src/components/MidiConvert.tsx to point at the right path. Then navigate to /midi-convert in your browser. Check the console for the sequence version.
+
+#### To run the repo
+
+```
+// install deps:
+yarn
+// run next dev:
+yarn dev
+```

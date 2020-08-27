@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import * as mm from '@magenta/music/es6';
 
+mm.urlToNoteSequence('/example.mid').then((sequence) => console.log(JSON.stringify(sequence)));
 const MidiConvert = () => {
   useEffect(() => {
-    const sequence = mm.urlToNoteSequence('/sad.mid').then((sequence) => console.log(JSON.stringify(sequence)));
+    const sequence = mm.urlToNoteSequence('/example.mid').then((sequence) => console.log(JSON.stringify(sequence)));
   }, []);
 
   return <div>Check the console</div>;
