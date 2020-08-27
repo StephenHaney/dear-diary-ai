@@ -114,15 +114,12 @@ const JournalScreen = () => {
 
             // Hide a new svg cover every N keystrokes:
             const coverCount = Math.floor(treeIndex.current / 6);
-            if (coverCount > 21) {
-              // We've gone too far, head back!
-              treeIndex;
-            }
             const treeBranch = document.querySelector('#cover-' + coverCount) as SVGElement;
             if (treeBranch) {
               treeBranch.style.transition = 'opacity 0.5s ease-in';
               treeBranch.style.opacity = treeCoverOpacityChange.current;
             }
+            // Hard coding magic numberz for JAM spririt... update this if we want multiple graphics later
             if (coverCount === 21) {
               // We've hit the end of the tree, start over
               treeIndex.current = 0;

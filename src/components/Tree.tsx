@@ -6,11 +6,11 @@ export const Tree = () => {
       style={{
         position: 'absolute',
         bottom: 0,
-        right: '0',
+        right: '5%',
         width: '100%',
         height: '100%',
         maxWidth: '80vw',
-        maxHeight: '70vh',
+        maxHeight: '74vh',
         overflow: 'hidden',
         opacity: 0.22,
       }}
@@ -19,6 +19,7 @@ export const Tree = () => {
         width="3015"
         height="2069"
         viewBox="0 0 3015 2069"
+        preserveAspectRatio="xMaxYMax meet"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         style={{ maxWidth: '100%', maxHeight: '100%', position: 'absolute', right: '2', bottom: -15 }}

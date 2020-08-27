@@ -21,6 +21,7 @@ export default function Home() {
     `When can I get my hair cut?`,
     `Let's adopt a dog`,
     `Let it all out`,
+    `Begin`,
   ];
 
   useEffect(() => {
