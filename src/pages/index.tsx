@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>So tell me a story</title>
+        <title>Dear Diary AI</title>
       </Head>
       <div
         ref={loadingCoverRef}

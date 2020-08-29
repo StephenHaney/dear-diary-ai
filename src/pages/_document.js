@@ -13,7 +13,7 @@ class MyDocument extends Document {
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
           <meta name="theme-color" content="#000000" />
           <meta name="google" content="notranslate" />
-          <link rel="icon" href="/favicon.ico" />
+          <link rel="icon" href="/favicon.png" />
           <link href="https://fonts.googleapis.com/css2?family=Lora:wght@432&display=swap" rel="stylesheet" />
 
           <style>{`
