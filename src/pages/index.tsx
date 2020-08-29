@@ -46,7 +46,7 @@ export default function Home() {
 
   function handleStartClick() {
     windRef.current!.play();
-    windRef.current!.volume = 0.15;
+    windRef.current!.volume = 0.05;
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
 
@@ -89,7 +89,7 @@ export default function Home() {
             outline: 'none',
             background: 'white',
             border: '3px solid #333',
-            padding: '20px',
+            padding: '15px',
             paddingLeft: '40px',
             paddingRight: '40px',
             fontSize: '20px',

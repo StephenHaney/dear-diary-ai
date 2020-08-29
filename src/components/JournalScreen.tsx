@@ -33,13 +33,20 @@ const silentKeys: Record<string, boolean> = {
   ArrowRight: false,
 };
 
-const chords: Record<string, string[]> = {
-  Am: ['A3', 'E4', 'G5'],
+type chord = string[];
+const chords: Record<string, chord> = {
+  Am: ['A2', 'E3', 'C3'],
+  Am7: ['A2', 'E3', 'C4', 'G4'],
+  Amaj9: ['A2', 'E3', 'B3'],
+  C: ['C2', 'E3', 'G3'],
+  Cmaj7: ['C3', 'E3', 'G4', 'B4'],
+  Cmaj9: ['C2', 'E3', 'B3', 'D4'],
+  Cmaj7NoRoot: ['E3', 'G4', 'B4'],
 };
-const chordKeys: Record<string, string[]> = {
-  '.': chords.Am,
-  '!': chords.Am,
-  '?': chords.Am,
+const chordKeys: Record<string, Array<chord>> = {
+  '.': [chords.C, chords.Am, chords.Cmaj7],
+  '!': [chords.Cmaj9, chords.Am7],
+  '?': [chords.Am7NoRoot],
 };
 
 const JournalScreen = () => {
@@ -99,10 +106,15 @@ const JournalScreen = () => {
             return;
           }
 
-          const chord = chordKeys[e.key];
+          let chord = null;
+          if (chordKeys[e.key]) {
+            const chordToPlayIndex = Math.floor(Math.random() * chordKeys[e.key].length);
+            chord = chordKeys[e.key][chordToPlayIndex];
+          }
+
           if (chord) {
             // Play a chord for this key
-            sampler.triggerAttackRelease(chord, 2, undefined, 0.25);
+            sampler.triggerAttackRelease(chord, 4, undefined, 0.25);
           } else {
             // Play the next note in the sequence
             const nextKey = melodies[1].notes![noteIndex.current];
@@ -110,7 +122,7 @@ const JournalScreen = () => {
 
             // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
             const velocity = Math.max(Math.min(Math.random() / 2, 0.2), 0.1);
-            sampler.triggerAttackRelease([nextNote], 4, undefined, velocity);
+            sampler.triggerAttackRelease([nextNote], 3, undefined, velocity);
 
             // Hide a new svg cover every N keystrokes:
             const coverCount = Math.floor(treeIndex.current / 6);
