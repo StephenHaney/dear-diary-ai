@@ -4,12 +4,29 @@ import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
 
+const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+
 const sampler = new Tone.Sampler({
   urls: {
+    C1: 'C1.mp3',
+    'D#1': 'Ds1.mp3',
+    'F#1': 'Fs1.mp3',
+    A1: 'A1.mp3',
+    C2: 'C2.mp3',
+    'D#2': 'Ds2.mp3',
+    'F#2': 'Fs2.mp3',
+    A2: 'A2.mp3',
+    C3: 'C3.mp3',
+    'D#3': 'Ds3.mp3',
+    'F#3': 'Fs3.mp3',
+    A3: 'A3.mp3',
     C4: 'C4.mp3',
     'D#4': 'Ds4.mp3',
     'F#4': 'Fs4.mp3',
     A4: 'A4.mp3',
+    C5: 'C5.mp3',
+    C6: 'C6.mp3',
   },
   release: 1,
 
@@ -25,8 +42,6 @@ const silentKeys: Record<string, boolean> = {
   Alt: false,
   Tab: false,
   ' ': false,
-  Backspace: false,
-  Delete: false,
   ArrowUp: false,
   ArrowDown: false,
   ArrowLeft: false,
@@ -46,13 +61,14 @@ const chords: Record<string, chord> = {
 const chordKeys: Record<string, Array<chord>> = {
   '.': [chords.C, chords.Am, chords.Cmaj7],
   '!': [chords.Cmaj9, chords.Am7],
-  '?': [chords.Am7NoRoot],
+  '?': [chords.Cmaj7NoRoot],
 };
 
 const JournalScreen = () => {
   const noteIndex = useRef(0);
   const treeIndex = useRef(0);
   const treeCoverOpacityChange = useRef('0');
+  const lastNotePlayed = useRef('C3');
 
   return (
     <>
@@ -100,52 +116,114 @@ const JournalScreen = () => {
           }
         }}
         onKeyDown={(e) => {
+          // If it's a silent key, bail out:
           const shouldBeSilent = silentKeys[e.key];
           if (shouldBeSilent === false || e.metaKey || e.ctrlKey || e.altKey) {
-            // Don't play a sound for this key
             return;
           }
 
+          // If it's a chord key, play the chord:
           let chord = null;
           if (chordKeys[e.key]) {
             const chordToPlayIndex = Math.floor(Math.random() * chordKeys[e.key].length);
             chord = chordKeys[e.key][chordToPlayIndex];
+
+            // Play a chord for this key
+            let delay = 0;
+            let velocity = 0.25;
+
+            const chordToUse = Math.random() > 0.7 ? chord.reverse() : chord;
+
+            for (const note of chordToUse) {
+              console.log(delay);
+              setTimeout(() => {
+                console.log(note);
+                const velocity = Math.max(Math.min(Math.random() / 2, 0.5), 0.1);
+                sampler.triggerAttackRelease([note], 4, undefined, velocity);
+              }, delay);
+
+              // Play the chord slower and lighter as it goes:
+              if (delay === 0) {
+                delay = 75;
+              } else {
+                delay *= 2.2;
+              }
+              velocity = velocity - 0.25;
+            }
+
+            return;
           }
 
-          if (chord) {
-            // Play a chord for this key
-            sampler.triggerAttackRelease(chord, 4, undefined, 0.25);
-          } else {
-            // Play the next note in the sequence
-            const nextKey = melodies[1].notes![noteIndex.current];
-            const nextNote = toNote(nextKey.pitch!);
-
-            // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
-            const velocity = Math.max(Math.min(Math.random() / 2, 0.2), 0.1);
-            sampler.triggerAttackRelease([nextNote], 3, undefined, velocity);
-
-            // Hide a new svg cover every N keystrokes:
-            const coverCount = Math.floor(treeIndex.current / 6);
-            const treeBranch = document.querySelector('#cover-' + coverCount) as SVGElement;
-            if (treeBranch) {
-              treeBranch.style.transition = 'opacity 0.5s ease-in';
-              treeBranch.style.opacity = treeCoverOpacityChange.current;
+          // If it's backspace or delete, descend the scale
+          if (e.key === 'Backspace' || e.key === 'Delete') {
+            if (e.currentTarget.value.length === 0) {
+              // Bail out if there's nothing to delete
+              return;
             }
-            // Hard coding magic numberz for JAM spririt... update this if we want multiple graphics later
-            if (coverCount === 21) {
-              // We've hit the end of the tree, start over
-              treeIndex.current = 0;
-              treeCoverOpacityChange.current = treeCoverOpacityChange.current === '1' ? '0' : '1';
+            const note = lastNotePlayed.current.replace(/[^a-z#+]/gi, '');
+            const octave = parseInt(lastNotePlayed.current.replace(/[^0-9+]/gi, ''));
+            const noteIndex = allNotes.indexOf(note);
+
+            if (noteIndex !== -1) {
+              let descendingNote;
+              let descendingNoteOctave;
+
+              if (noteIndex === 0) {
+                // Reached the root, lower the octave and grab the max child
+                descendingNoteOctave = octave - 1;
+                descendingNote = allNotes[allNotes.length - 1];
+              } else {
+                descendingNoteOctave = octave;
+                descendingNote = allNotes[noteIndex - 1];
+              }
+
+              if (descendingNoteOctave === 0) {
+                // If we reach 0, start up high again
+                descendingNoteOctave = 5;
+              }
+
+              const noteWithOctave = `${descendingNote}${descendingNoteOctave}`;
+              sampler.triggerAttackRelease([noteWithOctave], 3, undefined, 0.15);
+              console.log(noteWithOctave);
+
+              lastNotePlayed.current = noteWithOctave;
             }
 
-            // +/- 1 to the tree index
-            treeIndex.current += 1;
-            // +1 to the note index
-            noteIndex.current += 1;
-            if (noteIndex.current === melodies[1].notes!.length) {
-              // Restart the melody if we've run out of notes
-              noteIndex.current = 0;
-            }
+            return;
+          }
+
+          // Play the next note in the sequence
+          const nextKey = melodies[2].notes![noteIndex.current];
+          const nextNote = toNote(nextKey.pitch!);
+
+          // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
+          const velocity = Math.max(Math.min(Math.random() / 2, 0.2), 0.1);
+          sampler.triggerAttackRelease([nextNote], 3, undefined, velocity);
+
+          // Remember the last note we played:
+          lastNotePlayed.current = nextNote;
+
+          // Hide a new svg cover every N keystrokes:
+          const coverCount = Math.floor(treeIndex.current / 6);
+          const treeBranch = document.querySelector('#cover-' + coverCount) as SVGElement;
+          if (treeBranch) {
+            treeBranch.style.transition = 'opacity 0.5s ease-in';
+            treeBranch.style.opacity = treeCoverOpacityChange.current;
+          }
+          // Hard coding magic numberz for JAM spririt... update this if we want multiple graphics later
+          if (coverCount === 21) {
+            // We've hit the end of the tree, start over
+            treeIndex.current = 0;
+            treeCoverOpacityChange.current = treeCoverOpacityChange.current === '1' ? '0' : '1';
+          }
+
+          // +/- 1 to the tree index
+          treeIndex.current += 1;
+          // +1 to the note index
+          noteIndex.current += 1;
+          if (noteIndex.current === melodies[1].notes!.length) {
+            // Restart the melody if we've run out of notes
+            noteIndex.current = 0;
           }
         }}
       ></textarea>
