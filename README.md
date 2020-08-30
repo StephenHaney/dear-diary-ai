@@ -1,4 +1,4 @@
-## Hello
+## Tell us a story
 
 <img src="https://deardiary.ai/complete-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
 
