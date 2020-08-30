@@ -104,6 +104,8 @@ const JournalScreen = ({ readonly = false }: Props) => {
   return (
     <>
       <textarea
+        readOnly={readonly}
+        disabled={readonly}
         style={{
           position: 'relative',
           zIndex: 3,
