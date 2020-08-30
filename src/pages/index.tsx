@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useRef, useEffect } from 'react';
+import '../firebase/initFirebase';
+import { generateEntry } from '../firebase/createEntry';
 
 export default function Home() {
   const JournalScreen = dynamic(() => import('../components/JournalScreen'), {
@@ -9,7 +11,6 @@ export default function Home() {
 
   const loadingCoverRef = useRef<HTMLDivElement>(null);
   const windRef = useRef<HTMLAudioElement>(null);
-  const journalTextRef = useRef<HTMLTextAreaElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
 
   const startMessages = [
@@ -58,6 +59,10 @@ export default function Home() {
       // Don't do this, use a ref, just moving fast for the JAM! since forwardRef is being weird
       document.querySelector('textarea')?.focus();
     }, 550);
+
+    generateEntry().then((newId) => {
+      history.replaceState({ entryId: newId }, 'New entry', `entry/${newId}`);
+    });
   }
 
   return (

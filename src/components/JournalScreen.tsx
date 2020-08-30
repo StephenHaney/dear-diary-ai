@@ -1,8 +1,16 @@
-import React, { useRef, useEffect, forwardRef } from 'react';
+import React, { useRef, useEffect, forwardRef, useCallback } from 'react';
 import * as Tone from 'tone';
 import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
+import debounce from 'lodash.debounce';
+import { persistKeys } from '../firebase/persistKeys';
+import { read } from 'fs';
+
+export type dbKeyPress = {
+  key: string;
+  timeFromBegin: number;
+};
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -31,6 +39,8 @@ const sampler = new Tone.Sampler({
   release: 1,
 
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
+
+  onload: () => console.log('done'),
 }).toDestination();
 
 const silentKeys: Record<string, boolean> = {
@@ -64,11 +74,32 @@ const chordKeys: Record<string, Array<chord>> = {
   '?': [chords.Cmaj7NoRoot],
 };
 
-const JournalScreen = () => {
+type Props = {
+  readonly?: boolean;
+};
+const JournalScreen = ({ readonly = false }: Props) => {
   const noteIndex = useRef(0);
   const treeIndex = useRef(0);
   const treeCoverOpacityChange = useRef('0');
   const lastNotePlayed = useRef('C3');
+
+  const unsavedKeys = useRef<Array<dbKeyPress>>([]);
+  const firstKeyPressTime = useRef(0);
+
+  /** Throttled save to the DB to persist any unpersisted key presses */
+  const persist = useCallback(
+    debounce(
+      () => {
+        const urlPieces = window.location.pathname.split('/');
+        const entryId = urlPieces[2];
+        persistKeys(entryId, unsavedKeys.current);
+        unsavedKeys.current = [];
+      },
+      1000,
+      { leading: true, trailing: true }
+    ),
+    []
+  );
 
   return (
     <>
@@ -80,7 +111,7 @@ const JournalScreen = () => {
           height: '99vh',
           width: '100%',
           maxWidth: '700px',
-          fontSize: '30px',
+          fontSize: '33px',
           border: 0,
           resize: 'none',
           outline: 'none',
@@ -91,8 +122,11 @@ const JournalScreen = () => {
           paddingRight: '30px',
           backgroundColor: 'rgba(255, 255, 255, 0.5)',
         }}
-        placeholder="How are you feeling?"
+        placeholder="How are you feeling? &#10;Start typing"
         onChange={(e) => {
+          if (!readonly) {
+            persist();
+          }
           // const newValue = e.currentTarget.value;
           // const lastCharacter = newValue[newValue.length - 1];
           // if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
@@ -116,6 +150,15 @@ const JournalScreen = () => {
           // }
         }}
         onKeyDown={(e) => {
+          if (firstKeyPressTime.current === 0) {
+            firstKeyPressTime.current = Date.now();
+          }
+          // Add this key press to the list to be persisted at the next save event
+          unsavedKeys.current.push({
+            key: e.key,
+            timeFromBegin: Date.now() - firstKeyPressTime.current,
+          });
+
           // If it's a silent key, bail out:
           const shouldBeSilent = silentKeys[e.key];
           if (shouldBeSilent === false || e.metaKey || e.ctrlKey || e.altKey) {
@@ -182,7 +225,6 @@ const JournalScreen = () => {
 
               const noteWithOctave = `${descendingNote}${descendingNoteOctave}`;
               sampler.triggerAttackRelease([noteWithOctave], 3, undefined, 0.15);
-              console.log(noteWithOctave);
 
               lastNotePlayed.current = noteWithOctave;
             }

@@ -22,14 +22,13 @@ Tone.js: https://tonejs.github.io/
 
 ### Credit:
 
-Journal tree:
-http://clipart-library.com/clip-art/tree-silhouette-svg-25.htm
+[Journal tree](http://clipart-library.com/clip-art/tree-silhouette-svg-25.htm)
 
-Excellent tutorial on MusicVAE:
-https://medium.com/@torinblankensmith/melody-mixer-using-deeplearn-js-to-mix-melodies-in-the-browser-8ad5b42b4d0b
+[Excellent tutorial on MusicVAE](https://medium.com/@torinblankensmith/melody-mixer-using-deeplearn-js-to-mix-melodies-in-the-browser-8ad5b42b4d0b)
 
-Fantastic tutorial on Magenta-js in general:
-https://hello-magenta.glitch.me/
+[IP Location Finder by KeyCDN](https://tools.keycdn.com/geo)
+
+[Fantastic tutorial on Magenta-js in general](https://hello-magenta.glitch.me/)
 
 ### Codebase instructions
 

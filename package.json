@@ -10,6 +10,8 @@
   "dependencies": {
     "@magenta/music": "^1.19.0",
     "apos-to-lex-form": "^1.0.5",
+    "firebase": "^7.19.1",
+    "lodash.debounce": "^4.0.8",
     "natural": "^2.1.5",
     "next": "9.5.2",
     "react": "16.13.1",
@@ -21,6 +23,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.10.4",
     "@babel/plugin-proposal-decorators": "^7.10.5",
+    "@types/lodash.debounce": "^4.0.6",
     "@types/node": "^14.6.0",
     "@types/react": "^16.9.46",
     "@types/styled-components": "^5.1.2",
