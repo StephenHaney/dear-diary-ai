@@ -92,8 +92,10 @@ const JournalScreen = ({ readonly = false }: Props) => {
       () => {
         const urlPieces = window.location.pathname.split('/');
         const entryId = urlPieces[2];
-        persistKeys(entryId, unsavedKeys.current);
-        unsavedKeys.current = [];
+        if (entryId) {
+          persistKeys(entryId, unsavedKeys.current);
+          unsavedKeys.current = [];
+        }
       },
       1000,
       { leading: true, trailing: true }

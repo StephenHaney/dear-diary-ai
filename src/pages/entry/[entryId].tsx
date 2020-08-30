@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { db } from '../../firebase/initFirebase';
 import { Entry } from '../../firebase/createEntry';
 import dynamic from 'next/dynamic';
+import * as Tone from 'tone';
 
 const EntryPlayback = () => {
   const router = useRouter();
@@ -22,23 +23,25 @@ const EntryPlayback = () => {
     setTimeout(() => {
       loadingCoverRef.current!.style.display = 'none';
 
-      // FIX
-      setTimeout(() => {
-        let lastKeyTime = 0;
-        // Don't do this, just moving fast for the JAM! Use a ref
-        const textArea = document.querySelector('textarea');
-        for (const [time, keychar] of Object.entries(entryData!.keys)) {
-          // If there's more than 1 second between notes, squish it down to 1s:
-          const playTime = parseInt(time) - lastKeyTime > 1000 ? lastKeyTime + 1000 : parseInt(time);
-          lastKeyTime = playTime;
-          if (textArea) {
-            setTimeout(() => {
-              textArea.dispatchEvent(new KeyboardEvent('keydown', { key: keychar, bubbles: true, cancelable: true }));
-              textArea.value += keychar;
-            }, playTime);
+      Tone.start().then(() => {
+        // FIX
+        setTimeout(() => {
+          let lastKeyTime = 0;
+          // Don't do this, just moving fast for the JAM! Use a ref
+          const textArea = document.querySelector('textarea');
+          for (const [time, keychar] of Object.entries(entryData!.keys)) {
+            // If there's more than 1 second between notes, squish it down to 1s:
+            const playTime = parseInt(time) - lastKeyTime > 1000 ? lastKeyTime + 1000 : parseInt(time);
+            lastKeyTime = playTime;
+            if (textArea) {
+              setTimeout(() => {
+                textArea.dispatchEvent(new KeyboardEvent('keydown', { key: keychar, bubbles: true, cancelable: true }));
+                textArea.value += keychar;
+              }, playTime);
+            }
           }
-        }
-      }, 500);
+        }, 500);
+      });
     }, 550);
   }
 
