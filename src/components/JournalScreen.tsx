@@ -187,9 +187,9 @@ const JournalScreen = ({ readonly = false }: Props) => {
 
               // Play the chord slower and lighter as it goes:
               if (delay === 0) {
-                delay = 75;
+                delay = 65;
               } else {
-                delay *= 2.2;
+                delay *= 2;
               }
               velocity = velocity - 0.25;
             }
@@ -235,7 +235,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
           }
 
           // Play the next note in the sequence
-          const nextKey = melodies[2].notes![noteIndex.current];
+          const nextKey = melodies[1].notes![noteIndex.current];
           const nextNote = toNote(nextKey.pitch!);
 
           // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
