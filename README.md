@@ -4,7 +4,7 @@
 
 We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using the Magenta MusicVAE ML model. As you write, you build your own visual and musical story.
 
-Visit tellmeyourstory.ai to experience the newest deploy.
+Visit deardiary.ai to experience the newest deploy.
 
 ---
 
