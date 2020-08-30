@@ -93,27 +93,27 @@ const JournalScreen = () => {
         }}
         placeholder="How are you feeling?"
         onChange={(e) => {
-          const newValue = e.currentTarget.value;
-          const lastCharacter = newValue[newValue.length - 1];
-          if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
-            // Score the text
-            // fetch('/api/sentiment', {
-            //   method: 'post',
-            //   body: JSON.stringify({
-            //     sample: e.currentTarget.value,
-            //   }),
-            // }).then((res) => {
-            //   if (res.status === 200) {
-            //     try {
-            //       res.json().then((result) => {
-            //         console.log(result);
-            //       });
-            //     } catch (e) {
-            //       console.log(e);
-            //     }
-            //   }
-            // });
-          }
+          // const newValue = e.currentTarget.value;
+          // const lastCharacter = newValue[newValue.length - 1];
+          // if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
+          //   // Score the text
+          //   fetch('/api/sentiment', {
+          //     method: 'post',
+          //     body: JSON.stringify({
+          //       sample: e.currentTarget.value,
+          //     }),
+          //   }).then((res) => {
+          //     if (res.status === 200) {
+          //       try {
+          //         res.json().then((result) => {
+          //           console.log(result);
+          //         });
+          //       } catch (e) {
+          //         console.log(e);
+          //       }
+          //     }
+          //   });
+          // }
         }}
         onKeyDown={(e) => {
           // If it's a silent key, bail out:
@@ -135,9 +135,7 @@ const JournalScreen = () => {
             const chordToUse = Math.random() > 0.7 ? chord.reverse() : chord;
 
             for (const note of chordToUse) {
-              console.log(delay);
               setTimeout(() => {
-                console.log(note);
                 const velocity = Math.max(Math.min(Math.random() / 2, 0.5), 0.1);
                 sampler.triggerAttackRelease([note], 4, undefined, velocity);
               }, delay);

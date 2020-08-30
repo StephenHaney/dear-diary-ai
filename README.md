@@ -1,6 +1,6 @@
 ## Hello
 
-<img src="https://deardiary.ai/finished-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
+<img src="https://deardiary.ai/complete-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
 
 We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using the Magenta MusicVAE ML model. As you write, you build your own visual and musical story.
 
