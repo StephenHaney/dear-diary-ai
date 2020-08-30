@@ -17,7 +17,9 @@ Visit deardiary.ai to experience the newest deploy.
 ### Prior art:
 
 Jazz Keys: https://jazzkeys.plan8.co/
+
 Magenta-js: https://github.com/magenta/magenta-js
+
 Tone.js: https://tonejs.github.io/
 
 ### Credit:
