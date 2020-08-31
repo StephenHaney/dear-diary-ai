@@ -7,57 +7,61 @@ import * as Tone from 'tone';
 import { persistEventIsSelection, persistEventIsKey } from '../../firebase/persistKeys';
 import { motion } from 'framer-motion';
 
-let ambiencePlayer: Tone.Player;
-let sampler: Tone.Sampler;
-if (typeof window !== 'undefined') {
-  sampler = new Tone.Sampler({
-    urls: {
-      C1: 'C1.mp3',
-      'D#1': 'Ds1.mp3',
-      'F#1': 'Fs1.mp3',
-      A1: 'A1.mp3',
-      C2: 'C2.mp3',
-      'D#2': 'Ds2.mp3',
-      'F#2': 'Fs2.mp3',
-      A2: 'A2.mp3',
-      C3: 'C3.mp3',
-      'D#3': 'Ds3.mp3',
-      'F#3': 'Fs3.mp3',
-      A3: 'A3.mp3',
-      C4: 'C4.mp3',
-      'D#4': 'Ds4.mp3',
-      'F#4': 'Fs4.mp3',
-      A4: 'A4.mp3',
-      C5: 'C5.mp3',
-      C6: 'C6.mp3',
-    },
-    release: 1,
-
-    baseUrl: '/samples/',
-
-    // onload: () => console.log('done'),
-  }).toDestination();
-
-  ambiencePlayer = new Tone.Player('/wind-birbs.mp3').toDestination();
-  ambiencePlayer.volume.value = -33;
-  ambiencePlayer.loop = true;
-}
-
 const EntryPlayback = () => {
   const router = useRouter();
   const { entryId } = router.query;
-  const [entryData, setEntryData] = useState<Entry | null>(null);
 
+  const [entryData, setEntryData] = useState<Entry | null>(null);
+  const [samplerIsReady, setSamplerIsReady] = useState(false);
+  const [ambienceIsReady, setAmbienceIsReady] = useState(false);
+
+  const sampler = useRef<Tone.Sampler>();
+  const ambiencePlayer = useRef<Tone.Player>();
   const loadingCoverRef = useRef<HTMLDivElement>(null);
 
   const JournalScreen = dynamic(() => import('../../components/JournalScreen'), {
     ssr: false,
   });
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sampler.current = new Tone.Sampler({
+        urls: {
+          C1: 'C1.mp3',
+          'D#1': 'Ds1.mp3',
+          'F#1': 'Fs1.mp3',
+          A1: 'A1.mp3',
+          C2: 'C2.mp3',
+          'D#2': 'Ds2.mp3',
+          'F#2': 'Fs2.mp3',
+          A2: 'A2.mp3',
+          C3: 'C3.mp3',
+          'D#3': 'Ds3.mp3',
+          'F#3': 'Fs3.mp3',
+          A3: 'A3.mp3',
+          C4: 'C4.mp3',
+          'D#4': 'Ds4.mp3',
+          'F#4': 'Fs4.mp3',
+          A4: 'A4.mp3',
+          C5: 'C5.mp3',
+          C6: 'C6.mp3',
+        },
+        release: 1,
+
+        baseUrl: '/samples/',
+        onload: () => setSamplerIsReady(true),
+      }).toDestination();
+
+      ambiencePlayer.current = new Tone.Player('/wind-birbs.mp3', () => setAmbienceIsReady(true)).toDestination();
+      ambiencePlayer.current.volume.value = -33;
+      ambiencePlayer.current.loop = true;
+    }
+  }, []);
+
   function handlePlayClick() {
     // Play the ambience:
-    if (ambiencePlayer.state !== 'started') {
-      ambiencePlayer.start();
+    if (ambiencePlayer.current?.state !== 'started') {
+      ambiencePlayer.current?.start();
     }
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
@@ -106,7 +110,7 @@ const EntryPlayback = () => {
                   // Play the notes!
                   for (const note of event.notes) {
                     setTimeout(() => {
-                      sampler.triggerAttackRelease([note.note], note.duration, undefined, note.velocity);
+                      sampler.current!.triggerAttackRelease([note.note], note.duration, undefined, note.velocity);
                     }, note.delayFromKeyPress);
                   }
                 }, playTime);
@@ -131,6 +135,8 @@ const EntryPlayback = () => {
         });
     }
   }, [entryId]);
+
+  const ready = samplerIsReady && ambienceIsReady;
 
   return (
     <>
@@ -169,6 +175,7 @@ const EntryPlayback = () => {
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 1.03 }}
           onClick={handlePlayClick}
+          disabled={!ready}
           style={{
             outline: 'none',
             background: 'transparent',
@@ -201,7 +208,8 @@ const EntryPlayback = () => {
           Start a new entry
         </a>
       </div>
-      <JournalScreen readonly={true} sampler={sampler} />
+
+      {ready && <JournalScreen readonly={true} sampler={sampler.current!} />}
     </>
   );
 };

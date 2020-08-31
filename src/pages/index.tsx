@@ -9,13 +9,13 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
   const router = useRouter();
-  let sampler: Tone.Sampler;
-  let ambiencePlayer: Tone.Player;
 
   const JournalScreen = dynamic(() => import('../components/JournalScreen'), {
     ssr: false,
   });
 
+  const sampler = useRef<Tone.Sampler>();
+  const ambiencePlayer = useRef<Tone.Player>();
   const loadingCoverRef = useRef<HTMLDivElement>(null);
   const windRef = useRef<HTMLAudioElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -36,7 +36,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      sampler = new Tone.Sampler({
+      sampler.current = new Tone.Sampler({
         urls: {
           C1: 'C1.mp3',
           'D#1': 'Ds1.mp3',
@@ -63,9 +63,9 @@ export default function Home() {
         onload: () => setSamplerIsReady(true),
       }).toDestination();
 
-      ambiencePlayer = new Tone.Player('/wind-birbs.mp3', () => setAmbienceIsReady(true)).toDestination();
-      ambiencePlayer.volume.value = -33;
-      ambiencePlayer.loop = true;
+      ambiencePlayer.current = new Tone.Player('/wind-birbs.mp3', () => setAmbienceIsReady(true)).toDestination();
+      ambiencePlayer.current.volume.value = -33;
+      ambiencePlayer.current.loop = true;
     }
   }, []);
 
@@ -91,8 +91,8 @@ export default function Home() {
 
   function handleStartClick() {
     // Play the ambience:
-    if (ambiencePlayer.state !== 'started') {
-      ambiencePlayer.start();
+    if (ambiencePlayer.current?.state !== 'started') {
+      ambiencePlayer.current?.start();
     }
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
@@ -113,7 +113,18 @@ export default function Home() {
 
   const skipSplash = typeof router.query.write !== 'undefined';
   if (skipSplash) {
-    handleStartClick();
+    // Definitely move this into a better timing model after jam time
+    function startAfterLoaded() {
+      const ready = samplerIsReady && ambienceIsReady;
+      if (ready) {
+        handleStartClick();
+      } else {
+        requestAnimationFrame(startAfterLoaded);
+      }
+    }
+
+    // Poll until we're ready and then start:
+    requestAnimationFrame(startAfterLoaded);
   }
 
   const ready = samplerIsReady && ambienceIsReady;
@@ -139,16 +150,19 @@ export default function Home() {
           display: skipSplash ? 'none' : 'flex',
         }}
       >
-        <h1 ref={headlineRef}>{startMessages[0]}</h1>
+        <h1 style={{ textAlign: 'center' }} ref={headlineRef}>
+          {startMessages[0]}
+        </h1>
         <motion.button
           whileHover={{ scale: 1.07 }}
           whileTap={{ scale: 1.03 }}
           onClick={handleStartClick}
+          disabled={!ready}
           style={{
             marginTop: '30px',
             outline: 'none',
             background: 'white',
-            border: '3px solid #333',
+            border: ready ? '3px solid #333' : '3px solid #fff',
             padding: '15px',
             paddingLeft: '40px',
             paddingRight: '40px',
@@ -158,11 +172,11 @@ export default function Home() {
             cursor: 'pointer',
           }}
         >
-          Begin
+          {ready ? 'Begin' : 'loading'}
         </motion.button>
       </div>
 
-      {ready && <JournalScreen sampler={sampler!} />}
+      {ready && <JournalScreen sampler={sampler.current!} />}
     </>
   );
 }
