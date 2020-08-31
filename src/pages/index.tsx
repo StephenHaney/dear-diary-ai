@@ -1,10 +1,13 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect } from 'react';
 import '../firebase/initFirebase';
 import { generateEntry } from '../firebase/createEntry';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
+
   const JournalScreen = dynamic(() => import('../components/JournalScreen'), {
     ssr: false,
   });
@@ -65,6 +68,8 @@ export default function Home() {
     });
   }
 
+  const skipSplash = typeof router.query.write !== 'undefined';
+
   return (
     <>
       <Head>
@@ -79,11 +84,11 @@ export default function Home() {
           left: 0,
           width: '100vw',
           height: '100vh',
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: 'white',
           flexDirection: 'column',
+          display: skipSplash ? 'none' : 'flex',
         }}
       >
         <h1 ref={headlineRef}>{startMessages[0]}</h1>

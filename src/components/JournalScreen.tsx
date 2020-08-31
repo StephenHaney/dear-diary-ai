@@ -116,6 +116,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
   return (
     <>
       <textarea
+        autoFocus={true}
         readOnly={readonly}
         disabled={readonly}
         style={{
@@ -165,6 +166,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
           }
           const newValue = e.currentTarget.value;
           const lastCharacter = newValue[newValue.length - 1];
+
           if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
             // Score the text
             fetch('/api/sentiment', {

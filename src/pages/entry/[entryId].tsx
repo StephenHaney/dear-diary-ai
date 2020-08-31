@@ -140,7 +140,7 @@ const EntryPlayback = () => {
         </button>
 
         <a
-          href="/"
+          href="/?write"
           style={{
             marginTop: '120px',
             outline: 'none',
