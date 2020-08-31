@@ -37,7 +37,7 @@ if (typeof window !== 'undefined') {
   }).toDestination();
 
   ambiencePlayer = new Tone.Player('/wind-birbs.mp3').toDestination();
-  ambiencePlayer.volume.value = -21;
+  ambiencePlayer.volume.value = -33;
   ambiencePlayer.loop = true;
 }
 
