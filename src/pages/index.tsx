@@ -5,7 +5,23 @@ import '../firebase/initFirebase';
 import { generateEntry } from '../firebase/createEntry';
 import { useRouter } from 'next/router';
 import * as Tone from 'tone';
-import { motion } from 'framer-motion';
+import styled from '@emotion/styled';
+
+const StartButton = styled.button({
+  marginTop: '30px',
+  outline: 'none',
+  background: 'white',
+  padding: '15px',
+  paddingLeft: '40px',
+  paddingRight: '40px',
+  fontSize: '20px',
+  borderRadius: '50px',
+  opacity: '0.8',
+  cursor: 'pointer',
+  transition: 'transform 1s ease-out',
+  '&:hover': { transform: 'scale(1.07)' },
+  '&:active': { transform: 'scale(1.03)' },
+});
 
 export default function Home() {
   const router = useRouter();
@@ -17,7 +33,6 @@ export default function Home() {
   const sampler = useRef<Tone.Sampler>();
   const ambiencePlayer = useRef<Tone.Player>();
   const loadingCoverRef = useRef<HTMLDivElement>(null);
-  const windRef = useRef<HTMLAudioElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const [samplerIsReady, setSamplerIsReady] = useState(false);
   const [ambienceIsReady, setAmbienceIsReady] = useState(false);
@@ -158,27 +173,13 @@ export default function Home() {
         <h1 style={{ textAlign: 'center' }} ref={headlineRef}>
           {startMessages[0]}
         </h1>
-        <motion.button
-          whileHover={{ scale: 1.07 }}
-          whileTap={{ scale: 1.03 }}
+        <StartButton
+          style={{ border: ready ? '3px solid #333' : '3px solid #fff' }}
           onClick={handleStartClick}
           disabled={!ready}
-          style={{
-            marginTop: '30px',
-            outline: 'none',
-            background: 'white',
-            border: ready ? '3px solid #333' : '3px solid #fff',
-            padding: '15px',
-            paddingLeft: '40px',
-            paddingRight: '40px',
-            fontSize: '20px',
-            borderRadius: '50px',
-            opacity: '0.8',
-            cursor: 'pointer',
-          }}
         >
           {ready ? 'Begin' : 'loading'}
-        </motion.button>
+        </StartButton>
       </div>
 
       {ready && <JournalScreen sampler={sampler.current!} />}

@@ -10,11 +10,10 @@ import styled from '@emotion/styled';
 const PlayButton = styled.button({
   outline: 'none',
   background: 'transparent',
-  opacity: '0.8',
+  opacity: '0',
   cursor: 'pointer',
   padding: '30px',
   border: 0,
-  opacity: 0,
   transition: 'transform 1s ease-out, opacity 1s ease-out',
   '&:hover': {
     transform: 'scale(1.07)',
@@ -191,7 +190,7 @@ const EntryPlayback = () => {
           opacity: 0.8,
         }}
       >
-        <PlayButton style={{ opacity: ready ? 1 : 0 }}>
+        <PlayButton style={{ opacity: ready ? 0.8 : 0 }}>
           <h1 style={{ marginBottom: '15px', color: '#282B2E' }}>(sound on)</h1>
           <svg width="29" height="45" viewBox="0 0 29 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 44.6667L-1.93787e-06 0.333346L28.5 22.5L0 44.6667Z" fill="#282B2E" />
