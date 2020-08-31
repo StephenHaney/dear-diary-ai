@@ -31,7 +31,7 @@ const EntryPlayback = () => {
           // Don't do this, just moving fast for the JAM! Use a ref
           const textArea = document.querySelector('textarea');
 
-          if (textArea) {
+          if (textArea && entryData!.events) {
             for (const [time, event] of Object.entries(entryData!.events)) {
               // If there's more than 1 second between notes, squish it down to 1s:
               const playTime = parseInt(time) - lastKeyTime > 1000 ? lastKeyTime + 1000 : parseInt(time);

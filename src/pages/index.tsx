@@ -69,6 +69,9 @@ export default function Home() {
   }
 
   const skipSplash = typeof router.query.write !== 'undefined';
+  if (skipSplash) {
+    handleStartClick();
+  }
 
   return (
     <>

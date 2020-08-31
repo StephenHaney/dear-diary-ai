@@ -4,6 +4,7 @@ import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
 import debounce from 'lodash.debounce';
+import throttle from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -91,6 +92,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
   const treeIndex = useRef(0);
   const treeCoverOpacityChange = useRef('0');
   const lastNotePlayed = useRef('C3');
+  const twitterShareRef = useRef<HTMLAnchorElement>(null);
 
   const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
   const firstKeyPressTime = useRef(0);
@@ -107,6 +109,35 @@ const JournalScreen = ({ readonly = false }: Props) => {
           unsavedPersists.current = [];
         }
       },
+      1000,
+      { leading: true, trailing: true }
+    ),
+    []
+  );
+
+  const readSentiment = useCallback(
+    throttle(
+      (sample: string) =>
+        // Score the text
+        fetch('/api/sentiment', {
+          method: 'post',
+          body: JSON.stringify({ sample }),
+        }).then((res) => {
+          if (res.status === 200) {
+            try {
+              res.json().then((result) => {
+                // Assign the new sentiment score as a 0-1 scale
+                currentSentiment.current = Number.isFinite(result.sentiment)
+                  ? Math.min(Math.max((result.sentiment + 1) / 2, 0), 1)
+                  : 0.5;
+
+                console.log('new sentiment ' + currentSentiment.current);
+              });
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        }),
       1000,
       { leading: true, trailing: true }
     ),
@@ -168,26 +199,10 @@ const JournalScreen = ({ readonly = false }: Props) => {
           const lastCharacter = newValue[newValue.length - 1];
 
           if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
-            // Score the text
-            fetch('/api/sentiment', {
-              method: 'post',
-              body: JSON.stringify({
-                sample: e.currentTarget.value,
-              }),
-            }).then((res) => {
-              if (res.status === 200) {
-                try {
-                  res.json().then((result) => {
-                    // Assign the new sentiment score as a 0-1 scale
-                    currentSentiment.current = Number.isFinite(result.sentiment)
-                      ? Math.min(Math.max((result.sentiment + 1) / 2, 0), 1)
-                      : 0.5;
-                  });
-                } catch (e) {
-                  console.log(e);
-                }
-              }
-            });
+            const totalEntry = e.currentTarget.value;
+            // Move the sentiment with the most recent writing:
+            const recentWriting = totalEntry.substring(totalEntry.length - 65);
+            readSentiment(recentWriting);
           }
         }}
         onKeyDown={(e) => {
@@ -278,7 +293,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
           }
 
           // Play the next note in the sequence
-          console.log('sentiment score: ' + currentSentiment.current);
+          // console.log('sentiment score: ' + currentSentiment.current);
           const melodyIndex = Math.round(melodies.length * currentSentiment.current);
           console.log({ melodyIndex });
           const melody = melodies[melodyIndex] ?? melodies[0];
@@ -326,6 +341,19 @@ const JournalScreen = ({ readonly = false }: Props) => {
       ></textarea>
 
       <Tree />
+
+      <div style={{ position: 'fixed', zIndex: 10, top: 0, right: 0, textAlign: 'right' }}>
+        <button
+          onClick={() =>
+            (window.location.href = `https://twitter.com/intent/tweet?text=Check%20out%20the%20song%20I%20made%20by%20writing%20a%20journal%20at%20${window.location.href}`)
+          }
+        >
+          Share on Twitter
+        </button>
+        <br />
+        <br />
+        <button onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy playback link</button>
+      </div>
     </>
   );
 };
