@@ -16,7 +16,6 @@ class MyDocument extends Document {
 
           <meta property="og:title" content="Dear Diary AI" />
           <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://deardiary.ai/" />
           <meta property="og:image" content="https://deardiary.ai/complete-tree.png" />
           <meta
             property="og:description"
@@ -25,6 +24,15 @@ class MyDocument extends Document {
           <meta property="og:determiner" content="the" />
           <meta property="og:locale" content="en_US" />
           <meta property="og:site_name" content="DearDiary.ai" />
+
+          <meta name="twitter:title" content="Dear Diary AI" />
+          <meta
+            name="twitter:description"
+            content="Find awareness and peace through the act of writing a journal entry. Our AI will write a song for you based
+            on your writing."
+          />
+          <meta name="twitter:image" content=" https://deardiary.ai/complete-tree.png" />
+          <meta name="twitter:card" content="summary_large_image" />
 
           <link rel="icon" href="/favicon.png" />
           <link href="https://fonts.googleapis.com/css2?family=Lora:wght@432&display=swap" rel="stylesheet" />

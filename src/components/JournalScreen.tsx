@@ -343,10 +343,13 @@ const JournalScreen = ({ readonly = false }: Props) => {
       <Tree />
 
       <div style={{ position: 'fixed', zIndex: 3, top: 0, right: 0, textAlign: 'right' }}>
+        {readonly === false && <button onClick={() => window.location.reload()}>Play back</button>}
+        <br />
+        <br />
         <button
           onClick={() =>
             window.open(
-              `https://twitter.com/intent/tweet?text=Check%20out%20the%20song%20I%20made%20by%20writing%20a%20journal%20at%20${window.location.href}`
+              `https://twitter.com/intent/tweet?text=This%20app%20lets%20you%20write%20a%20song%20and%20a%20story.%20This%20is%20so%20cool!%20Check%20out%20mine%20${window.location.href}`
             )
           }
         >
@@ -355,6 +358,9 @@ const JournalScreen = ({ readonly = false }: Props) => {
         <br />
         <br />
         <button onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy playback link</button>
+        <br />
+        <br />
+        <button>About</button>
       </div>
     </>
   );
