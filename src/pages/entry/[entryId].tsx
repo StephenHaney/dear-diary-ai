@@ -33,7 +33,7 @@ if (typeof window !== 'undefined') {
     },
     release: 1,
 
-    baseUrl: 'https://tonejs.github.io/audio/salamander/',
+    baseUrl: '/samples/',
 
     // onload: () => console.log('done'),
   }).toDestination();

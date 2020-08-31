@@ -1,48 +1,16 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import '../firebase/initFirebase';
 import { generateEntry } from '../firebase/createEntry';
 import { useRouter } from 'next/router';
 import * as Tone from 'tone';
 import { motion } from 'framer-motion';
 
-let sampler: Tone.Sampler;
-let ambiencePlayer: Tone.Player;
-if (typeof window !== 'undefined') {
-  sampler = new Tone.Sampler({
-    urls: {
-      C1: 'C1.mp3',
-      'D#1': 'Ds1.mp3',
-      'F#1': 'Fs1.mp3',
-      A1: 'A1.mp3',
-      C2: 'C2.mp3',
-      'D#2': 'Ds2.mp3',
-      'F#2': 'Fs2.mp3',
-      A2: 'A2.mp3',
-      C3: 'C3.mp3',
-      'D#3': 'Ds3.mp3',
-      'F#3': 'Fs3.mp3',
-      A3: 'A3.mp3',
-      C4: 'C4.mp3',
-      'D#4': 'Ds4.mp3',
-      'F#4': 'Fs4.mp3',
-      A4: 'A4.mp3',
-      C5: 'C5.mp3',
-      C6: 'C6.mp3',
-    },
-    release: 1,
-
-    baseUrl: 'https://tonejs.github.io/audio/salamander/',
-  }).toDestination();
-
-  ambiencePlayer = new Tone.Player('/wind-birbs.mp3').toDestination();
-  ambiencePlayer.volume.value = -33;
-  ambiencePlayer.loop = true;
-}
-
 export default function Home() {
   const router = useRouter();
+  let sampler: Tone.Sampler;
+  let ambiencePlayer: Tone.Player;
 
   const JournalScreen = dynamic(() => import('../components/JournalScreen'), {
     ssr: false,
@@ -51,6 +19,8 @@ export default function Home() {
   const loadingCoverRef = useRef<HTMLDivElement>(null);
   const windRef = useRef<HTMLAudioElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
+  const [samplerIsReady, setSamplerIsReady] = useState(false);
+  const [ambienceIsReady, setAmbienceIsReady] = useState(false);
 
   const startMessages = [
     `So tell me a story`,
@@ -63,6 +33,41 @@ export default function Home() {
     `Let it all out`,
     `Begin`,
   ];
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      sampler = new Tone.Sampler({
+        urls: {
+          C1: 'C1.mp3',
+          'D#1': 'Ds1.mp3',
+          'F#1': 'Fs1.mp3',
+          A1: 'A1.mp3',
+          C2: 'C2.mp3',
+          'D#2': 'Ds2.mp3',
+          'F#2': 'Fs2.mp3',
+          A2: 'A2.mp3',
+          C3: 'C3.mp3',
+          'D#3': 'Ds3.mp3',
+          'F#3': 'Fs3.mp3',
+          A3: 'A3.mp3',
+          C4: 'C4.mp3',
+          'D#4': 'Ds4.mp3',
+          'F#4': 'Fs4.mp3',
+          A4: 'A4.mp3',
+          C5: 'C5.mp3',
+          C6: 'C6.mp3',
+        },
+        release: 1,
+
+        baseUrl: '/samples/',
+        onload: () => setSamplerIsReady(true),
+      }).toDestination();
+
+      ambiencePlayer = new Tone.Player('/wind-birbs.mp3', () => setAmbienceIsReady(true)).toDestination();
+      ambiencePlayer.volume.value = -33;
+      ambiencePlayer.loop = true;
+    }
+  }, []);
 
   useEffect(() => {
     let messageCounter = 1;
@@ -111,6 +116,8 @@ export default function Home() {
     handleStartClick();
   }
 
+  const ready = samplerIsReady && ambienceIsReady;
+
   return (
     <>
       <Head>
@@ -155,7 +162,7 @@ export default function Home() {
         </motion.button>
       </div>
 
-      <JournalScreen sampler={sampler} />
+      {ready && <JournalScreen sampler={sampler!} />}
     </>
   );
 }
