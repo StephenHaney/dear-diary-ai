@@ -1,11 +1,12 @@
 import { db } from './initFirebase';
 import getServerTimestamp from './getServerTimestamp';
+import { dbKeyPress, dbSelectionEvent } from './persistKeys';
 
 export type Entry = {
   ip: string | null;
   latitude: string | null;
   longitude: string | null;
-  keys: Record<number, string>;
+  events: Record<number, dbKeyPress | dbSelectionEvent>;
   created: number;
   updated: number;
 };

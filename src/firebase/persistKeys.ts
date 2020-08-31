@@ -1,16 +1,50 @@
 import { db } from './initFirebase';
 import getServerTimestamp from './getServerTimestamp';
-import { dbKeyPress } from '../components/JournalScreen';
 
-export function persistKeys(entryId: string, newKeys: dbKeyPress[]) {
+export type dbKeyPress = {
+  type: 'key';
+  key: string;
+  timeFromBegin: number;
+};
+
+export type dbSelectionEvent = {
+  type: 'selection';
+  selectionStart: number;
+  selectionEnd: number;
+  timeFromBegin: number;
+};
+
+export function persistEventIsKey(event: dbKeyPress | dbSelectionEvent): event is dbKeyPress {
+  return event.type === 'key';
+}
+
+export function persistEventIsSelection(event: dbKeyPress | dbSelectionEvent): event is dbSelectionEvent {
+  return event.type === 'selection';
+}
+
+export function persistKeys(entryId: string, persistEvents: Array<dbKeyPress | dbSelectionEvent>) {
   const batch = db.batch();
   const entryDoc = db.collection('entries').doc(entryId);
 
-  for (const key of newKeys) {
-    batch.update(entryDoc, {
-      [`keys.${key.timeFromBegin}`]: key.key,
-      ip: (window as any).ip,
-    });
+  for (const persistEvent of persistEvents) {
+    if (persistEventIsKey(persistEvent)) {
+      batch.update(entryDoc, {
+        [`events.${persistEvent.timeFromBegin}`]: {
+          key: persistEvent.key,
+          type: persistEvent.type,
+        },
+        ip: (window as any).ip,
+      });
+    } else if (persistEventIsSelection(persistEvent)) {
+      batch.update(entryDoc, {
+        [`events.${persistEvent.timeFromBegin}`]: {
+          type: persistEvent.type,
+          selectionStart: persistEvent.selectionStart,
+          selectionEnd: persistEvent.selectionEnd,
+        },
+        ip: (window as any).ip,
+      });
+    }
   }
 
   batch.update(entryDoc, {

@@ -4,13 +4,9 @@ import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
 import debounce from 'lodash.debounce';
-import { persistKeys } from '../firebase/persistKeys';
+import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
 import { read } from 'fs';
-
-export type dbKeyPress = {
-  key: string;
-  timeFromBegin: number;
-};
+import { readOnly } from 'tone/build/esm/core/util/Interface';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -40,7 +36,7 @@ const sampler = new Tone.Sampler({
 
   baseUrl: 'https://tonejs.github.io/audio/salamander/',
 
-  onload: () => console.log('done'),
+  // onload: () => console.log('done'),
 }).toDestination();
 
 const silentKeys: Record<string, boolean> = {
@@ -57,6 +53,20 @@ const silentKeys: Record<string, boolean> = {
   ArrowLeft: false,
   ArrowRight: false,
 };
+
+/** Don't persist these keys, we don't use them: */
+const ignoreKeysForPersist = new Set([
+  'Shift',
+  'ArrowLeft',
+  'ArrowUp',
+  'ArrowRight',
+  'ArrowDown',
+  'Meta',
+  'Escape',
+  'Control',
+  'Alt',
+  'Tab',
+]);
 
 type chord = string[];
 const chords: Record<string, chord> = {
@@ -83,7 +93,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
   const treeCoverOpacityChange = useRef('0');
   const lastNotePlayed = useRef('C3');
 
-  const unsavedKeys = useRef<Array<dbKeyPress>>([]);
+  const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
   const firstKeyPressTime = useRef(0);
 
   /** Throttled save to the DB to persist any unpersisted key presses */
@@ -93,8 +103,8 @@ const JournalScreen = ({ readonly = false }: Props) => {
         const urlPieces = window.location.pathname.split('/');
         const entryId = urlPieces[2];
         if (entryId) {
-          persistKeys(entryId, unsavedKeys.current);
-          unsavedKeys.current = [];
+          persistKeys(entryId, unsavedPersists.current);
+          unsavedPersists.current = [];
         }
       },
       1000,
@@ -126,7 +136,29 @@ const JournalScreen = ({ readonly = false }: Props) => {
           paddingRight: '30px',
           backgroundColor: 'rgba(255, 255, 255, 0.5)',
         }}
-        placeholder="How are you feeling? &#10;Start typing"
+        onSelect={(e) => {
+          if (!readonly) {
+            const textarea = e.currentTarget;
+            const selectionStart = textarea.selectionStart;
+            const selectionEnd = textarea.selectionEnd;
+
+            if (selectionStart === selectionEnd && selectionStart === textarea.textLength) {
+              // Bail if the selection is at the end, which will happen automatically
+              return;
+            }
+
+            // Add this key press to the list to be persisted at the next save event
+            unsavedPersists.current.push({
+              type: 'selection',
+              selectionStart,
+              selectionEnd,
+              timeFromBegin: Date.now() - firstKeyPressTime.current,
+            });
+
+            persist();
+          }
+        }}
+        placeholder={readonly ? 'How are you feeling?' : 'How are you feeling?           Start typing'}
         onChange={(e) => {
           if (!readonly) {
             persist();
@@ -157,11 +189,15 @@ const JournalScreen = ({ readonly = false }: Props) => {
           if (firstKeyPressTime.current === 0) {
             firstKeyPressTime.current = Date.now();
           }
-          // Add this key press to the list to be persisted at the next save event
-          unsavedKeys.current.push({
-            key: e.key,
-            timeFromBegin: Date.now() - firstKeyPressTime.current,
-          });
+
+          if (ignoreKeysForPersist.has(e.key) === false) {
+            // Add this key press to the list to be persisted at the next save event
+            unsavedPersists.current.push({
+              type: 'key',
+              key: e.key,
+              timeFromBegin: Date.now() - firstKeyPressTime.current,
+            });
+          }
 
           // If it's a silent key, bail out:
           const shouldBeSilent = silentKeys[e.key];
