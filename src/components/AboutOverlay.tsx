@@ -8,14 +8,14 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
   return (
     <div
       style={{
-        position: 'fixed',
+        position: 'absolute',
         left: 0,
         top: 0,
+        right: 0,
+        bottom: 0,
+        overflow: 'hidden',
         width: '100vw',
         height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         zIndex: 20,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
         backdropFilter: 'blur(5px)',
@@ -34,17 +34,21 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           maxWidth: 600,
+          margin: 'auto',
+          top: '10vh',
+          maxHeight: '80vh',
           position: 'relative',
           padding: '50px 60px',
-          borderRadius: 25,
+          borderRadius: 3,
           boxShadow: '0 0 1rem 0 rgba(0, 0, 0, .08)',
           border: '1px solid #eee',
-          fontSize: '18px',
+          fontSize: '21px',
           transform: 'scale(0.97)',
-          lineHeight: '28px',
+          lineHeight: '32px',
+          overflow: 'auto',
         }}
       >
-        <h1 style={{ marginBottom: '40px' }}>Hello</h1>
+        <h1 style={{ marginBottom: '40px' }}>Hello friend</h1>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding
           experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using
@@ -67,7 +71,7 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
           Devin Lane – follow at <a href="https://twitter.com/gentle_return">https://twitter.com/gentle_return</a>
         </p>
         <motion.button
-          whileHover={{ scale: 1.35 }}
+          whileHover={{ scale: 1.2 }}
           style={{
             position: 'absolute',
             top: 20,

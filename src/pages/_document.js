@@ -44,6 +44,7 @@ class MyDocument extends Document {
               font-family: Lora;
               width: 100vw;
               height: 100vh;
+              overflow: 'hidden',
             }
 
             a {

@@ -193,7 +193,9 @@ const EntryPlayback = () => {
           </svg>
         </motion.button>
 
-        <a
+        <motion.a
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 1.03 }}
           href="/?write"
           style={{
             marginTop: '120px',
@@ -208,7 +210,7 @@ const EntryPlayback = () => {
           }}
         >
           Start a new entry
-        </a>
+        </motion.a>
       </div>
 
       {ready && <JournalScreen readonly={true} sampler={sampler.current!} />}
