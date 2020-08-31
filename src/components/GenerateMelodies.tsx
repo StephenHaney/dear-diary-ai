@@ -326,7 +326,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 78,
+          pitch: 76,
           velocity: 87,
           startTime: 6.469791666666667,
           endTime: 6.594791666666667,
@@ -344,7 +344,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 85,
+          pitch: 79,
           velocity: 87,
           startTime: 6.719791666666667,
           endTime: 6.844791666666667,
@@ -425,7 +425,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 82,
+          pitch: 81,
           velocity: 87,
           startTime: 7.844791666666667,
           endTime: 7.969791666666667,
@@ -434,7 +434,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 82,
+          pitch: 81,
           velocity: 87,
           startTime: 7.969791666666667,
           endTime: 8.094791666666667,
@@ -443,7 +443,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 77,
+          pitch: 76,
           velocity: 87,
           startTime: 8.094791666666667,
           endTime: 8.219791666666667,
@@ -461,7 +461,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 70,
+          pitch: 69,
           velocity: 87,
           startTime: 8.344791666666667,
           endTime: 8.469791666666667,
@@ -470,7 +470,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 65,
+          pitch: 67,
           velocity: 87,
           startTime: 8.469791666666667,
           endTime: 8.594791666666667,
@@ -497,7 +497,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 70,
+          pitch: 69,
           velocity: 87,
           startTime: 8.844791666666667,
           endTime: 8.969791666666667,
@@ -506,7 +506,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 75,
+          pitch: 76,
           velocity: 87,
           startTime: 8.969791666666667,
           endTime: 9.094791666666667,
@@ -551,7 +551,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 77,
+          pitch: 79,
           velocity: 87,
           startTime: 9.594791666666667,
           endTime: 9.719791666666667,
@@ -569,7 +569,7 @@ const MidiConvert = () => {
           isDrum: false,
         },
         {
-          pitch: 77,
+          pitch: 79,
           velocity: 87,
           startTime: 9.844791666666667,
           endTime: 9.969791666666667,
