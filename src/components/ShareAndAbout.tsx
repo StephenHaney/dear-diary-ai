@@ -51,7 +51,7 @@ export const ShareAndAbout = ({ readonly }: Props) => {
       <Wrapper>
         <BottomButton onClick={() => (window.location.href = '/?write')}>NEW</BottomButton>
 
-        {readonly === false && <BottomButton onClick={() => window.location.reload()}>REPLAY</BottomButton>}
+        <BottomButton onClick={() => window.location.reload()}>REPLAY</BottomButton>
 
         <BottomButton onClick={() => setShareIsOpen(true)}>SHARE</BottomButton>
 
