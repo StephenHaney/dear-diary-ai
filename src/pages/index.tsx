@@ -90,24 +90,27 @@ export default function Home() {
   }, []);
 
   function handleStartClick() {
-    // Play the ambience:
-    if (ambiencePlayer.current?.state !== 'started') {
-      ambiencePlayer.current?.start();
-    }
-    loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
-    loadingCoverRef.current!.style.opacity = '0';
+    Tone.start().then(() => {
+      // Play the ambience:
+      if (ambiencePlayer.current?.state !== 'started') {
+        ambiencePlayer.current?.start();
+      }
 
-    // Stop the button text from changing
-    clearInterval((window as any).buttonInterval);
+      loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
+      loadingCoverRef.current!.style.opacity = '0';
 
-    setTimeout(() => {
-      loadingCoverRef.current!.style.display = 'none';
-      // Don't do this, use a ref, just moving fast for the JAM! since forwardRef is being weird
-      document.querySelector('textarea')?.focus();
-    }, 550);
+      // Stop the button text from changing
+      clearInterval((window as any).buttonInterval);
 
-    generateEntry().then((newId) => {
-      history.replaceState({ entryId: newId }, 'New entry', `entry/${newId}`);
+      setTimeout(() => {
+        loadingCoverRef.current!.style.display = 'none';
+        // Don't do this, use a ref, just moving fast for the JAM! since forwardRef is being weird
+        document.querySelector('textarea')?.focus();
+      }, 550);
+
+      generateEntry().then((newId) => {
+        history.replaceState({ entryId: newId }, 'New entry', `entry/${newId}`);
+      });
     });
   }
 

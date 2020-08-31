@@ -59,17 +59,17 @@ const EntryPlayback = () => {
   }, []);
 
   function handlePlayClick() {
-    // Play the ambience:
-    if (ambiencePlayer.current?.state !== 'started') {
-      ambiencePlayer.current?.start();
-    }
-    loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
-    loadingCoverRef.current!.style.opacity = '0';
+    Tone.start().then(() => {
+      // Play the ambience:
+      if (ambiencePlayer.current?.state !== 'started') {
+        ambiencePlayer.current?.start();
+      }
+      loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
+      loadingCoverRef.current!.style.opacity = '0';
 
-    setTimeout(() => {
-      loadingCoverRef.current!.style.display = 'none';
+      setTimeout(() => {
+        loadingCoverRef.current!.style.display = 'none';
 
-      Tone.start().then(() => {
         // FIX
         setTimeout(() => {
           let lastKeyTime = 0;
@@ -118,8 +118,8 @@ const EntryPlayback = () => {
             }
           }
         }, 500);
-      });
-    }, 550);
+      }, 550);
+    });
   }
 
   useEffect(() => {

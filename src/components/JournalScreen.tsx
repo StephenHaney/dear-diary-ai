@@ -39,6 +39,8 @@ const ignoreKeysForPersist = new Set([
   'Alt',
   'Tab',
   'CapsLock',
+  'Home',
+  'End',
 ]);
 
 type chord = string[];
