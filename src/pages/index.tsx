@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
-import { useRef, useEffect, useLayoutEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import '../firebase/initFirebase';
 import { generateEntry } from '../firebase/createEntry';
 import { useRouter } from 'next/router';
 import * as Tone from 'tone';
+import { motion } from 'framer-motion';
 
 let sampler: Tone.Sampler;
 if (typeof window !== 'undefined') {
@@ -127,7 +128,9 @@ export default function Home() {
         }}
       >
         <h1 ref={headlineRef}>{startMessages[0]}</h1>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 1.03 }}
           onClick={handleStartClick}
           style={{
             marginTop: '30px',
@@ -144,7 +147,7 @@ export default function Home() {
           }}
         >
           Begin
-        </button>
+        </motion.button>
       </div>
       <audio ref={windRef} loop={true}>
         <source src="/wind-birbs.mp3" type="audio/mpeg" />

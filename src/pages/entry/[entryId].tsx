@@ -5,6 +5,7 @@ import { Entry } from '../../firebase/createEntry';
 import dynamic from 'next/dynamic';
 import * as Tone from 'tone';
 import { persistEventIsSelection, persistEventIsKey } from '../../firebase/persistKeys';
+import { motion } from 'framer-motion';
 
 let sampler: Tone.Sampler;
 if (typeof window !== 'undefined') {
@@ -155,7 +156,9 @@ const EntryPlayback = () => {
           opacity: 0.8,
         }}
       >
-        <button
+        <motion.button
+          whileHover={{ scale: 1.07 }}
+          whileTap={{ scale: 1.03 }}
           onClick={handlePlayClick}
           style={{
             outline: 'none',
@@ -170,7 +173,7 @@ const EntryPlayback = () => {
           <svg width="29" height="45" viewBox="0 0 29 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 44.6667L-1.93787e-06 0.333346L28.5 22.5L0 44.6667Z" fill="#282B2E" />
           </svg>
-        </button>
+        </motion.button>
 
         <a
           href="/?write"

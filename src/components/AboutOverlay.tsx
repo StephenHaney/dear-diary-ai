@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 
 type Props = {
   setIsOpen: (isOpen: boolean) => void;
@@ -26,7 +27,10 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         }
       }}
     >
-      <div
+      <motion.div
+        animate={{
+          scale: [0.97, 1.01, 1],
+        }}
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           maxWidth: 600,
@@ -36,6 +40,7 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
           boxShadow: '0 0 1rem 0 rgba(0, 0, 0, .08)',
           border: '1px solid #eee',
           fontSize: '18px',
+          transform: 'scale(0.97)',
           lineHeight: '28px',
         }}
       >
@@ -61,7 +66,8 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           Devin Lane – follow at <a href="https://twitter.com/gentle_return">https://twitter.com/gentle_return</a>
         </p>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.35 }}
           style={{
             position: 'absolute',
             top: 20,
@@ -90,8 +96,8 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
               fill="#282B2E"
             />
           </svg>
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
     </div>
   );
 };
