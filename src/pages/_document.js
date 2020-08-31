@@ -13,6 +13,19 @@ class MyDocument extends Document {
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
           <meta name="theme-color" content="#000000" />
           <meta name="google" content="notranslate" />
+
+          <meta property="og:title" content="Dear Diary AI" />
+          <meta property="og:type" content="website" />
+          <meta property="og:url" content="https://deardiary.ai/" />
+          <meta property="og:image" content="https://deardiary.ai/complete-tree.png" />
+          <meta
+            property="og:description"
+            content="Find awareness and peace through the act of writing a journal entry. Our AI will write a song for you based on your writing."
+          />
+          <meta property="og:determiner" content="the" />
+          <meta property="og:locale" content="en_US" />
+          <meta property="og:site_name" content="DearDiary.ai" />
+
           <link rel="icon" href="/favicon.png" />
           <link href="https://fonts.googleapis.com/css2?family=Lora:wght@432&display=swap" rel="stylesheet" />
 

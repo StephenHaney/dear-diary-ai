@@ -342,10 +342,12 @@ const JournalScreen = ({ readonly = false }: Props) => {
 
       <Tree />
 
-      <div style={{ position: 'fixed', zIndex: 10, top: 0, right: 0, textAlign: 'right' }}>
+      <div style={{ position: 'fixed', zIndex: 3, top: 0, right: 0, textAlign: 'right' }}>
         <button
           onClick={() =>
-            (window.location.href = `https://twitter.com/intent/tweet?text=Check%20out%20the%20song%20I%20made%20by%20writing%20a%20journal%20at%20${window.location.href}`)
+            window.open(
+              `https://twitter.com/intent/tweet?text=Check%20out%20the%20song%20I%20made%20by%20writing%20a%20journal%20at%20${window.location.href}`
+            )
           }
         >
           Share on Twitter
