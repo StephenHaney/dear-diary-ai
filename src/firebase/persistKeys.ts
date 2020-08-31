@@ -1,10 +1,18 @@
 import { db } from './initFirebase';
 import getServerTimestamp from './getServerTimestamp';
 
+export type dbNote = {
+  note: string;
+  velocity: number;
+  duration: number;
+  delayFromKeyPress: number;
+};
+
 export type dbKeyPress = {
   type: 'key';
   key: string;
   timeFromBegin: number;
+  notes: Array<dbNote>;
 };
 
 export type dbSelectionEvent = {
@@ -32,6 +40,7 @@ export function persistKeys(entryId: string, persistEvents: Array<dbKeyPress | d
         [`events.${persistEvent.timeFromBegin}`]: {
           key: persistEvent.key,
           type: persistEvent.type,
+          notes: persistEvent.notes,
         },
         ip: (window as any).ip,
       });

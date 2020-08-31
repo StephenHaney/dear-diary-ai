@@ -45,6 +45,15 @@ class MyDocument extends Document {
               width: 100vw;
               height: 100vh;
             }
+
+            a {
+              color: #464da4;
+              text-decoration: none;
+            }
+
+            a:hover {
+              text-decoration: underline;
+            }
             `}</style>
 
           <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50429811-4"></script>

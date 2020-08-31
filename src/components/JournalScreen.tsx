@@ -1,42 +1,15 @@
 import React, { useRef, useEffect, forwardRef, useCallback } from 'react';
-import * as Tone from 'tone';
 import { Tree } from './Tree';
 import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
 import debounce from 'lodash.debounce';
+import * as Tone from 'tone';
 import throttle from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
+import { ShareAndAbout } from './ShareAndAbout';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-
-const sampler = new Tone.Sampler({
-  urls: {
-    C1: 'C1.mp3',
-    'D#1': 'Ds1.mp3',
-    'F#1': 'Fs1.mp3',
-    A1: 'A1.mp3',
-    C2: 'C2.mp3',
-    'D#2': 'Ds2.mp3',
-    'F#2': 'Fs2.mp3',
-    A2: 'A2.mp3',
-    C3: 'C3.mp3',
-    'D#3': 'Ds3.mp3',
-    'F#3': 'Fs3.mp3',
-    A3: 'A3.mp3',
-    C4: 'C4.mp3',
-    'D#4': 'Ds4.mp3',
-    'F#4': 'Fs4.mp3',
-    A4: 'A4.mp3',
-    C5: 'C5.mp3',
-    C6: 'C6.mp3',
-  },
-  release: 1,
-
-  baseUrl: 'https://tonejs.github.io/audio/salamander/',
-
-  // onload: () => console.log('done'),
-}).toDestination();
 
 const silentKeys: Record<string, boolean> = {
   Shift: false,
@@ -86,13 +59,13 @@ const chordKeys: Record<string, Array<chord>> = {
 
 type Props = {
   readonly?: boolean;
+  sampler: Tone.Sampler;
 };
-const JournalScreen = ({ readonly = false }: Props) => {
+const JournalScreen = ({ readonly = false, sampler }: Props) => {
   const noteIndex = useRef(0);
   const treeIndex = useRef(0);
   const treeCoverOpacityChange = useRef('0');
   const lastNotePlayed = useRef('C3');
-  const twitterShareRef = useRef<HTMLAnchorElement>(null);
 
   const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
   const firstKeyPressTime = useRef(0);
@@ -210,13 +183,17 @@ const JournalScreen = ({ readonly = false }: Props) => {
             firstKeyPressTime.current = Date.now();
           }
 
+          const dbKey: dbKeyPress = {
+            type: 'key',
+            key: e.key,
+            timeFromBegin: Date.now() - firstKeyPressTime.current,
+            notes: [],
+          };
+
           if (ignoreKeysForPersist.has(e.key) === false) {
             // Add this key press to the list to be persisted at the next save event
-            unsavedPersists.current.push({
-              type: 'key',
-              key: e.key,
-              timeFromBegin: Date.now() - firstKeyPressTime.current,
-            });
+            // The notes will get filled in before the persist happens
+            unsavedPersists.current.push(dbKey);
           }
 
           // If it's a silent key, bail out:
@@ -236,12 +213,14 @@ const JournalScreen = ({ readonly = false }: Props) => {
             let velocity = 0.25;
 
             const chordToUse = Math.random() > 0.7 ? chord.reverse() : chord;
+            const duration = 4;
 
             for (const note of chordToUse) {
               setTimeout(() => {
-                const velocity = Math.max(Math.min(Math.random() / 2, 0.5), 0.1);
-                sampler.triggerAttackRelease([note], 4, undefined, velocity);
+                sampler.triggerAttackRelease([note], duration, undefined, velocity);
               }, delay);
+              // Add it to the DB copy:
+              dbKey.notes.push({ note: note, duration, velocity, delayFromKeyPress: delay });
 
               // Play the chord slower and lighter as it goes:
               if (delay === 0) {
@@ -249,7 +228,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
               } else {
                 delay *= 2;
               }
-              velocity = velocity - 0.25;
+              velocity = velocity - 0.175 * velocity;
             }
 
             return;
@@ -284,7 +263,11 @@ const JournalScreen = ({ readonly = false }: Props) => {
               }
 
               const noteWithOctave = `${descendingNote}${descendingNoteOctave}`;
-              sampler.triggerAttackRelease([noteWithOctave], 3, undefined, 0.15);
+              const velocity = 0.15;
+              const duration = 3;
+              sampler.triggerAttackRelease([noteWithOctave], duration, undefined, velocity);
+              // Add it to the DB copy:
+              dbKey.notes.push({ note: noteWithOctave, duration, velocity, delayFromKeyPress: 0 });
 
               lastNotePlayed.current = noteWithOctave;
             }
@@ -310,7 +293,10 @@ const JournalScreen = ({ readonly = false }: Props) => {
 
           // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
           const velocity = Math.max(Math.min(Math.random() / 2, 0.2), 0.1);
-          sampler.triggerAttackRelease([nextNote], 3, undefined, velocity);
+          const duration = 3;
+          sampler.triggerAttackRelease([nextNote], duration, undefined, velocity);
+          // Add it to the DB copy:
+          dbKey.notes.push({ note: nextNote, duration, velocity, delayFromKeyPress: 0 });
 
           // Remember the last note we played:
           lastNotePlayed.current = nextNote;
@@ -342,26 +328,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
 
       <Tree />
 
-      <div style={{ position: 'fixed', zIndex: 3, top: 0, right: 0, textAlign: 'right' }}>
-        {readonly === false && <button onClick={() => window.location.reload()}>Play back</button>}
-        <br />
-        <br />
-        <button
-          onClick={() =>
-            window.open(
-              `https://twitter.com/intent/tweet?text=This%20app%20lets%20you%20write%20a%20song%20and%20a%20story.%20This%20is%20so%20cool!%20Check%20out%20mine%20${window.location.href}`
-            )
-          }
-        >
-          Share on Twitter
-        </button>
-        <br />
-        <br />
-        <button onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy playback link</button>
-        <br />
-        <br />
-        <button>About</button>
-      </div>
+      <ShareAndAbout readonly={readonly} />
     </>
   );
 };

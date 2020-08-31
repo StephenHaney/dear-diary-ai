@@ -4,6 +4,38 @@ import { useRef, useEffect, useLayoutEffect } from 'react';
 import '../firebase/initFirebase';
 import { generateEntry } from '../firebase/createEntry';
 import { useRouter } from 'next/router';
+import * as Tone from 'tone';
+
+let sampler: Tone.Sampler;
+if (typeof window !== 'undefined') {
+  sampler = new Tone.Sampler({
+    urls: {
+      C1: 'C1.mp3',
+      'D#1': 'Ds1.mp3',
+      'F#1': 'Fs1.mp3',
+      A1: 'A1.mp3',
+      C2: 'C2.mp3',
+      'D#2': 'Ds2.mp3',
+      'F#2': 'Fs2.mp3',
+      A2: 'A2.mp3',
+      C3: 'C3.mp3',
+      'D#3': 'Ds3.mp3',
+      'F#3': 'Fs3.mp3',
+      A3: 'A3.mp3',
+      C4: 'C4.mp3',
+      'D#4': 'Ds4.mp3',
+      'F#4': 'Fs4.mp3',
+      A4: 'A4.mp3',
+      C5: 'C5.mp3',
+      C6: 'C6.mp3',
+    },
+    release: 1,
+
+    baseUrl: 'https://tonejs.github.io/audio/salamander/',
+
+    // onload: () => console.log('done'),
+  }).toDestination();
+}
 
 export default function Home() {
   const router = useRouter();
@@ -117,7 +149,7 @@ export default function Home() {
       <audio ref={windRef} loop={true}>
         <source src="/wind-birbs.mp3" type="audio/mpeg" />
       </audio>
-      <JournalScreen />
+      <JournalScreen sampler={sampler} />
     </>
   );
 }

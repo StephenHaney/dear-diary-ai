@@ -6,6 +6,37 @@ import dynamic from 'next/dynamic';
 import * as Tone from 'tone';
 import { persistEventIsSelection, persistEventIsKey } from '../../firebase/persistKeys';
 
+let sampler: Tone.Sampler;
+if (typeof window !== 'undefined') {
+  sampler = new Tone.Sampler({
+    urls: {
+      C1: 'C1.mp3',
+      'D#1': 'Ds1.mp3',
+      'F#1': 'Fs1.mp3',
+      A1: 'A1.mp3',
+      C2: 'C2.mp3',
+      'D#2': 'Ds2.mp3',
+      'F#2': 'Fs2.mp3',
+      A2: 'A2.mp3',
+      C3: 'C3.mp3',
+      'D#3': 'Ds3.mp3',
+      'F#3': 'Fs3.mp3',
+      A3: 'A3.mp3',
+      C4: 'C4.mp3',
+      'D#4': 'Ds4.mp3',
+      'F#4': 'Fs4.mp3',
+      A4: 'A4.mp3',
+      C5: 'C5.mp3',
+      C6: 'C6.mp3',
+    },
+    release: 1,
+
+    baseUrl: 'https://tonejs.github.io/audio/salamander/',
+
+    // onload: () => console.log('done'),
+  }).toDestination();
+}
+
 const EntryPlayback = () => {
   const router = useRouter();
   const { entryId } = router.query;
@@ -62,10 +93,12 @@ const EntryPlayback = () => {
                     textArea.setSelectionRange(textArea.value.length, textArea.value.length);
                   }
 
-                  // Send the key event to get the tone!
-                  textArea.dispatchEvent(
-                    new KeyboardEvent('keydown', { key: keychar, bubbles: true, cancelable: true })
-                  );
+                  // Play the notes!
+                  for (const note of event.notes) {
+                    setTimeout(() => {
+                      sampler.triggerAttackRelease([note.note], note.duration, undefined, note.velocity);
+                    }, note.delayFromKeyPress);
+                  }
                 }, playTime);
               }
             }
@@ -156,7 +189,7 @@ const EntryPlayback = () => {
           Start a new entry
         </a>
       </div>
-      <JournalScreen readonly={true} />
+      <JournalScreen readonly={true} sampler={sampler} />
     </>
   );
 };
