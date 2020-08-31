@@ -7,6 +7,7 @@ import * as Tone from 'tone';
 import { persistEventIsSelection, persistEventIsKey } from '../../firebase/persistKeys';
 import { motion } from 'framer-motion';
 
+let ambiencePlayer: Tone.Player;
 let sampler: Tone.Sampler;
 if (typeof window !== 'undefined') {
   sampler = new Tone.Sampler({
@@ -36,6 +37,10 @@ if (typeof window !== 'undefined') {
 
     // onload: () => console.log('done'),
   }).toDestination();
+
+  ambiencePlayer = new Tone.Player('/wind-birbs.mp3').toDestination();
+  ambiencePlayer.volume.value = -21;
+  ambiencePlayer.loop = true;
 }
 
 const EntryPlayback = () => {
@@ -50,6 +55,10 @@ const EntryPlayback = () => {
   });
 
   function handlePlayClick() {
+    // Play the ambience:
+    if (ambiencePlayer.state !== 'started') {
+      ambiencePlayer.start();
+    }
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
 

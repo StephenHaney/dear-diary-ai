@@ -8,6 +8,7 @@ import * as Tone from 'tone';
 import { motion } from 'framer-motion';
 
 let sampler: Tone.Sampler;
+let ambiencePlayer: Tone.Player;
 if (typeof window !== 'undefined') {
   sampler = new Tone.Sampler({
     urls: {
@@ -33,9 +34,11 @@ if (typeof window !== 'undefined') {
     release: 1,
 
     baseUrl: 'https://tonejs.github.io/audio/salamander/',
-
-    // onload: () => console.log('done'),
   }).toDestination();
+
+  ambiencePlayer = new Tone.Player('/wind-birbs.mp3').toDestination();
+  ambiencePlayer.volume.value = -21;
+  ambiencePlayer.loop = true;
 }
 
 export default function Home() {
@@ -82,8 +85,10 @@ export default function Home() {
   }, []);
 
   function handleStartClick() {
-    windRef.current!.play();
-    windRef.current!.volume = 0.05;
+    // Play the ambience:
+    if (ambiencePlayer.state !== 'started') {
+      ambiencePlayer.start();
+    }
     loadingCoverRef.current!.style.transition = 'opacity 500ms ease-out';
     loadingCoverRef.current!.style.opacity = '0';
 
@@ -149,9 +154,7 @@ export default function Home() {
           Begin
         </motion.button>
       </div>
-      <audio ref={windRef} loop={true}>
-        <source src="/wind-birbs.mp3" type="audio/mpeg" />
-      </audio>
+
       <JournalScreen sampler={sampler} />
     </>
   );
