@@ -1,5 +1,53 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import styled from '@emotion/styled';
+import { keyframes } from '@emotion/core';
+
+export const bounceIn = keyframes`
+  0% {
+    transform: scale(0.98);
+  }
+
+  60% {
+    transform: scale(1.008);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+`;
+
+export const Modal = styled.div({
+  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+  maxWidth: 600,
+  maxHeight: '80vh',
+  margin: 'auto',
+  top: '10vh',
+  position: 'relative',
+  padding: '50px 60px',
+  borderRadius: 4,
+  boxShadow: '0 0 1rem 0 rgba(0, 0, 0, .08)',
+  border: '1px solid #eee',
+  fontSize: '21px',
+  lineHeight: '32px',
+  overflow: 'auto',
+  animation: `${bounceIn} 1s ease`,
+});
+
+export const CloseButton = styled.button({
+  position: 'absolute',
+  top: 20,
+  right: 20,
+  padding: 5,
+  outline: 0,
+  background: 'none',
+  border: 0,
+  cursor: 'pointer',
+  opacity: '0.6',
+  transition: 'transform 1s ease-out',
+  '&:hover': {
+    transform: 'scale(1.1)',
+  },
+});
 
 type Props = {
   setIsOpen: (isOpen: boolean) => void;
@@ -27,27 +75,7 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         }
       }}
     >
-      <motion.div
-        animate={{
-          scale: [0.97, 1.01, 1],
-        }}
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          maxWidth: 600,
-          margin: 'auto',
-          top: '10vh',
-          maxHeight: '80vh',
-          position: 'relative',
-          padding: '50px 60px',
-          borderRadius: 3,
-          boxShadow: '0 0 1rem 0 rgba(0, 0, 0, .08)',
-          border: '1px solid #eee',
-          fontSize: '21px',
-          transform: 'scale(0.97)',
-          lineHeight: '32px',
-          overflow: 'auto',
-        }}
-      >
+      <Modal>
         <h1 style={{ marginBottom: '40px' }}>Hello friend</h1>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding
@@ -70,21 +98,7 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           Devin Lane – follow at <a href="https://twitter.com/gentle_return">https://twitter.com/gentle_return</a>
         </p>
-        <motion.button
-          whileHover={{ scale: 1.2 }}
-          style={{
-            position: 'absolute',
-            top: 20,
-            right: 20,
-            padding: 5,
-            outline: 0,
-            background: 'none',
-            border: 0,
-            cursor: 'pointer',
-            opacity: '0.6',
-          }}
-          onClick={() => setIsOpen(false)}
-        >
+        <CloseButton onClick={() => setIsOpen(false)}>
           <svg
             style={{ transform: 'scale(2)' }}
             width="15"
@@ -100,8 +114,8 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
               fill="#282B2E"
             />
           </svg>
-        </motion.button>
-      </motion.div>
+        </CloseButton>
+      </Modal>
     </div>
   );
 };

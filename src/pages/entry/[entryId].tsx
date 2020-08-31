@@ -5,7 +5,24 @@ import { Entry } from '../../firebase/createEntry';
 import dynamic from 'next/dynamic';
 import * as Tone from 'tone';
 import { persistEventIsSelection, persistEventIsKey } from '../../firebase/persistKeys';
-import { motion } from 'framer-motion';
+import styled from '@emotion/styled';
+
+const PlayButton = styled.button({
+  outline: 'none',
+  background: 'transparent',
+  opacity: '0.8',
+  cursor: 'pointer',
+  padding: '30px',
+  border: 0,
+  opacity: 0,
+  transition: 'transform 1s ease-out, opacity 1s ease-out',
+  '&:hover': {
+    transform: 'scale(1.07)',
+  },
+  '&:active': {
+    transform: 'scale(1.03)',
+  },
+});
 
 const EntryPlayback = () => {
   const router = useRouter();
@@ -157,6 +174,7 @@ const EntryPlayback = () => {
       )}
 
       <div
+        onClick={() => ready && handlePlayClick()}
         ref={loadingCoverRef}
         style={{
           position: 'fixed',
@@ -173,44 +191,12 @@ const EntryPlayback = () => {
           opacity: 0.8,
         }}
       >
-        <motion.button
-          whileHover={{ scale: 1.07 }}
-          whileTap={{ scale: 1.03 }}
-          onClick={handlePlayClick}
-          disabled={!ready}
-          style={{
-            outline: 'none',
-            background: 'transparent',
-            opacity: '0.8',
-            cursor: 'pointer',
-            padding: '30px',
-            border: 0,
-          }}
-        >
+        <PlayButton style={{ opacity: ready ? 1 : 0 }}>
           <h1 style={{ marginBottom: '15px', color: '#282B2E' }}>(sound on)</h1>
           <svg width="29" height="45" viewBox="0 0 29 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 44.6667L-1.93787e-06 0.333346L28.5 22.5L0 44.6667Z" fill="#282B2E" />
           </svg>
-        </motion.button>
-
-        <motion.a
-          whileHover={{ scale: 1.07 }}
-          whileTap={{ scale: 1.03 }}
-          href="/?write"
-          style={{
-            marginTop: '120px',
-            outline: 'none',
-            background: 'transparent',
-            opacity: '0.7',
-            cursor: 'pointer',
-            border: 0,
-            fontSize: 20,
-            textDecoration: 'none',
-            color: '#464da4',
-          }}
-        >
-          Start a new entry
-        </motion.a>
+        </PlayButton>
       </div>
 
       {ready && <JournalScreen readonly={true} sampler={sampler.current!} />}

@@ -12,9 +12,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/core": "^10.0.35",
+    "@emotion/styled": "^10.0.27",
     "@magenta/music": "^1.19.0",
     "firebase": "^7.19.1",
-    "framer-motion": "^2.6.5",
     "lodash.debounce": "^4.0.8",
     "next": "9.5.2",
     "react": "16.13.1",

@@ -1,35 +1,62 @@
 import React, { useState } from 'react';
 import { AboutOverlay } from './AboutOverlay';
+import styled from '@emotion/styled';
+import { ShareOverlay } from './ShareOverlay';
+
+export const BottomButton = styled.button({
+  border: '3px solid rgba(0, 0, 0, 0.6)',
+  padding: '10px',
+  paddingLeft: '30px',
+  paddingRight: '30px',
+  fontSize: '20px',
+  background: 'none',
+  color: '#555',
+  borderRadius: 3,
+  cursor: 'pointer',
+  margin: 10,
+  transition: 'transform 1s ease-out, color 1s ease-out',
+  '&:hover': {
+    transform: 'scale(1.04)',
+    color: '#464da4',
+  },
+});
+
+const Wrapper = styled.div({
+  position: 'fixed',
+  zIndex: 3,
+  bottom: 20,
+  paddingLeft: '20',
+  paddingRight: '20',
+  textAlign: 'right',
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'space-around',
+  '@media (min-width: 768px)': {
+    left: 60,
+  },
+});
 
 type Props = {
   readonly: boolean;
 };
 export const ShareAndAbout = ({ readonly }: Props) => {
   const [aboutIsOpen, setAboutIsOpen] = useState(false);
+  const [shareIsOpen, setShareIsOpen] = useState(false);
 
   return (
     <>
       {aboutIsOpen && <AboutOverlay setIsOpen={setAboutIsOpen} />}
+      {shareIsOpen && <ShareOverlay setIsOpen={setShareIsOpen} />}
 
-      <div style={{ position: 'fixed', zIndex: 3, bottom: 20, left: 60, textAlign: 'right', display: 'flex' }}>
-        <button onClick={() => (window.location.href = '/?write')}>Start new</button>
+      <Wrapper>
+        <BottomButton onClick={() => (window.location.href = '/?write')}>NEW</BottomButton>
 
-        {readonly === false && <button onClick={() => window.location.reload()}>Play back</button>}
+        {readonly === false && <BottomButton onClick={() => window.location.reload()}>REPLAY</BottomButton>}
 
-        <button
-          onClick={() =>
-            window.open(
-              `https://twitter.com/intent/tweet?text=This%20app%20makes%20music%20out%20of%20your%20journal%20entry,%20so%20cool!%20Check%20out%20mine%20and%20make%20yours%20too%20${window.location.href}`
-            )
-          }
-        >
-          Share on Twitter
-        </button>
+        <BottomButton onClick={() => setShareIsOpen(true)}>SHARE</BottomButton>
 
-        <button onClick={() => navigator.clipboard.writeText(window.location.href)}>Copy playback link</button>
-
-        <button onClick={() => setAboutIsOpen(true)}>About</button>
-      </div>
+        <BottomButton onClick={() => setAboutIsOpen(true)}>about</BottomButton>
+      </Wrapper>
     </>
   );
 };
