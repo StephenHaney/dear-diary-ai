@@ -133,11 +133,28 @@ const EntryPlayback = () => {
             border: 0,
           }}
         >
-          <h1 style={{ marginBottom: '15px', color: '#282B2E' }}>Sound on</h1>
+          <h1 style={{ marginBottom: '15px', color: '#282B2E' }}>(sound on)</h1>
           <svg width="29" height="45" viewBox="0 0 29 45" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0 44.6667L-1.93787e-06 0.333346L28.5 22.5L0 44.6667Z" fill="#282B2E" />
           </svg>
         </button>
+
+        <a
+          href="/"
+          style={{
+            marginTop: '120px',
+            outline: 'none',
+            background: 'transparent',
+            opacity: '0.7',
+            cursor: 'pointer',
+            border: 0,
+            fontSize: 20,
+            textDecoration: 'none',
+            color: '#464da4',
+          }}
+        >
+          Start a new entry
+        </a>
       </div>
       <JournalScreen readonly={true} />
     </>

@@ -15,42 +15,42 @@ export default (req: NextApiRequest, res: NextApiResponse) => {
 
   if (sample && typeof sample === 'string') {
     // Get rid of contractions (I'm => I am)
-    console.time('lex');
+    // console.time('lex');
     const lexedSample = aposToLexForm(sample);
-    console.timeEnd('lex');
+    // console.timeEnd('lex');
     // Everything lower case
-    console.time('case');
+    // console.time('case');
     const casedSample = lexedSample.toLowerCase();
-    console.timeEnd('case');
+    // console.timeEnd('case');
     // Remove non-alpha characters
-    console.time('alpha');
+    // console.time('alpha');
     const alphaOnlySample = casedSample.replace(/[^a-zA-Z\s]+/g, '');
-    console.timeEnd('alpha');
+    // console.timeEnd('alpha');
 
     // Convert sample to tokens:
-    console.time('token');
+    // console.time('token');
     const { WordTokenizer } = natural;
     const tokenizer = new WordTokenizer();
     const tokenizedSample = tokenizer.tokenize(alphaOnlySample);
-    console.timeEnd('token');
+    // console.timeEnd('token');
 
     // Correct spelling:
-    console.time('spelling');
+    // console.time('spelling');
     tokenizedSample.forEach((word: string, index: number) => {
       tokenizedSample[index] = spellCorrector.correct(word);
     });
-    console.timeEnd('spelling');
+    // console.timeEnd('spelling');
 
     // Remove stop words:
-    console.time('stop');
+    // console.time('stop');
     const filteredSample = StopWord.removeStopwords(tokenizedSample);
-    console.timeEnd('stop');
+    // console.timeEnd('stop');
 
-    console.time('Sentiment');
+    // console.time('Sentiment');
     const { SentimentAnalyzer, PorterStemmer } = natural;
-    const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'pattern');
+    const analyzer = new SentimentAnalyzer('English', PorterStemmer, 'afinn');
     const sentiment = analyzer.getSentiment(filteredSample);
-    console.timeEnd('Sentiment');
+    // console.timeEnd('Sentiment');
     res.status(200).json({ sentiment });
   } else {
     res.status(500).end();

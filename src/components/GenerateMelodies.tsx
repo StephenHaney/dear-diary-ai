@@ -730,7 +730,7 @@ const MidiConvert = () => {
     const quantizedSad = sequences.quantizeNoteSequence(SAD, 4);
 
     vae.initialize().then(() => {
-      vae.interpolate([quantizedSad, quantizedHappy], 3).then((melodies) => {
+      vae.interpolate([quantizedSad, quantizedHappy], 20).then((melodies) => {
         console.log(JSON.stringify(melodies));
       });
     });

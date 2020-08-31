@@ -5,8 +5,6 @@ import { melodies } from '../melodies';
 import { toNote } from './utils/midiHelpers';
 import debounce from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
-import { read } from 'fs';
-import { readOnly } from 'tone/build/esm/core/util/Interface';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -66,6 +64,7 @@ const ignoreKeysForPersist = new Set([
   'Control',
   'Alt',
   'Tab',
+  'CapsLock',
 ]);
 
 type chord = string[];
@@ -95,6 +94,7 @@ const JournalScreen = ({ readonly = false }: Props) => {
 
   const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
   const firstKeyPressTime = useRef(0);
+  const currentSentiment = useRef(0.5);
 
   /** Throttled save to the DB to persist any unpersisted key presses */
   const persist = useCallback(
@@ -158,32 +158,35 @@ const JournalScreen = ({ readonly = false }: Props) => {
             persist();
           }
         }}
-        placeholder={readonly ? 'How are you feeling?' : 'How are you feeling?           Start typing'}
+        placeholder="How are you feeling? &#10;Start typing"
         onChange={(e) => {
           if (!readonly) {
             persist();
           }
-          // const newValue = e.currentTarget.value;
-          // const lastCharacter = newValue[newValue.length - 1];
-          // if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
-          //   // Score the text
-          //   fetch('/api/sentiment', {
-          //     method: 'post',
-          //     body: JSON.stringify({
-          //       sample: e.currentTarget.value,
-          //     }),
-          //   }).then((res) => {
-          //     if (res.status === 200) {
-          //       try {
-          //         res.json().then((result) => {
-          //           console.log(result);
-          //         });
-          //       } catch (e) {
-          //         console.log(e);
-          //       }
-          //     }
-          //   });
-          // }
+          const newValue = e.currentTarget.value;
+          const lastCharacter = newValue[newValue.length - 1];
+          if (lastCharacter === ' ' || lastCharacter === '.' || lastCharacter === '!' || lastCharacter === '?') {
+            // Score the text
+            fetch('/api/sentiment', {
+              method: 'post',
+              body: JSON.stringify({
+                sample: e.currentTarget.value,
+              }),
+            }).then((res) => {
+              if (res.status === 200) {
+                try {
+                  res.json().then((result) => {
+                    // Assign the new sentiment score as a 0-1 scale
+                    currentSentiment.current = Number.isFinite(result.sentiment)
+                      ? Math.min(Math.max((result.sentiment + 1) / 2, 0), 1)
+                      : 0.5;
+                  });
+                } catch (e) {
+                  console.log(e);
+                }
+              }
+            });
+          }
         }}
         onKeyDown={(e) => {
           if (firstKeyPressTime.current === 0) {
@@ -273,7 +276,19 @@ const JournalScreen = ({ readonly = false }: Props) => {
           }
 
           // Play the next note in the sequence
-          const nextKey = melodies[1].notes![noteIndex.current];
+          console.log('sentiment score: ' + currentSentiment.current);
+          const melodyIndex = Math.round(melodies.length * currentSentiment.current);
+          console.log({ melodyIndex });
+          const melody = melodies[melodyIndex] ?? melodies[0];
+
+          let nextKey;
+          if (noteIndex.current > melody.notes.length - 1) {
+            // If we're above this melody's last note, use the last note:
+            nextKey = melody.notes[melody.notes.length - 1];
+          } else {
+            // Otherwise, use the key at this index:
+            nextKey = melody.notes[noteIndex.current];
+          }
           const nextNote = toNote(nextKey.pitch!);
 
           // Randomize velocity between 0.1 and 0.2, but mostly hit 0.2
