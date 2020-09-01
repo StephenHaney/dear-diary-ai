@@ -122,6 +122,8 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
   return (
     <>
       <textarea
+        // @ts-ignore: this is a valid attribute
+        spellcheck="false"
         autoFocus={true}
         readOnly={readonly}
         disabled={readonly}
