@@ -36,15 +36,21 @@ export const ShareOverlay = ({ setIsOpen }: Props) => {
 
         <p>Whoever you send it to will see your words play back in real time.</p>
 
-        <BottomButton
-          onClick={(e) => {
-            navigator.clipboard.writeText(window.location.href);
-            e.currentTarget.innerText = 'Copy playback link (done)';
-          }}
-          style={{ marginLeft: 0 }}
-        >
-          Copy playback link
-        </BottomButton>
+        <div style={{ position: 'relative', display: 'inline-block' }}>
+          <BottomButton
+            onClick={(e) => {
+              navigator.clipboard.writeText(window.location.href);
+              const button = e.currentTarget;
+              button.innerText = 'Copied';
+              setTimeout(() => {
+                button.innerText = 'Copy playback link';
+              }, 1700);
+            }}
+            style={{ marginLeft: 0, width: 233 }}
+          >
+            Copy playback link
+          </BottomButton>
+        </div>
 
         <BottomButton
           onClick={() =>
@@ -53,7 +59,13 @@ export const ShareOverlay = ({ setIsOpen }: Props) => {
             )
           }
         >
-          Share on Twitter
+          Tweet
+        </BottomButton>
+
+        <BottomButton
+          onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`)}
+        >
+          Facebook
         </BottomButton>
 
         <CloseButton onClick={() => setIsOpen(false)}>
