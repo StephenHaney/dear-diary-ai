@@ -1,5 +1,5 @@
 # Turn your journal into music
-[DearDiary.ai](https://deardiary.ai/)
+## [DearDiary.ai](https://deardiary.ai/)
 
 <img src="https://deardiary.ai/complete-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
 
@@ -45,29 +45,29 @@ We save entries using Google Firestore for realtime persistence so that users ca
 
 ## What's next for Dear Diary
 
--Increase dialogue with mental health professionals for maximum emotional benefit and enjoyment for users
+- Increase dialogue with mental health professionals for maximum emotional benefit and enjoyment for users
 
--Increase dialogue community of users who are musically timid, yet curious
+- Increase dialogue community of users who are musically timid, yet curious
 
--Increase dialogue with general users for next directions
+- Increase dialogue with general users for next directions
 
--Offer new sound design and melodies
+- Offer new sound design and melodies
 
--Offer journal entry saving and user accounts as well as new sharing integrations
+- Offer journal entry saving and user accounts as well as new sharing integrations
 
--Improved visuals using generative AI
+- Improved visuals using generative AI
 
 ## Areas for future research and technological developments in the community
 
--Improved multi-dimensional emotion ranking libraries
+- Improved multi-dimensional emotion ranking libraries
 
--ImprovRNN often produced results we found not musical
+- ImprovRNN often produced results we found not musical
 
--Integrate MIDI to Tone.js and Magenta.js
+- Integrate MIDI to Tone.js and Magenta.js
 
--Improved documentation to match the quality of the examples
+- Improved documentation to match the quality of the examples
 
--Create audio plug-ins for DAWs like Logic and Reaper
+- Create audio plug-ins for DAWs like Logic and Reaper
 
 ---
 
