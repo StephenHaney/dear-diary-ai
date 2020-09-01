@@ -110,7 +110,9 @@ Place your .mid file in the public folder and manually update /src/components/Mi
 #### To run the repo
 
 ```
-// install deps:
+// make sure you have next.js installed
+npm install -g next
+// install project dependencies via:
 yarn
 // run next dev:
 yarn dev
