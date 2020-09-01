@@ -87,6 +87,8 @@ Tone.js: https://tonejs.github.io/
 
 ### Credit:
 
+[vaderSentiment-js](https://github.com/vaderSentiment/vaderSentiment-js)
+
 [Journal tree](http://clipart-library.com/clip-art/tree-silhouette-svg-25.htm)
 
 [Excellent tutorial on MusicVAE](https://medium.com/@torinblankensmith/melody-mixer-using-deeplearn-js-to-mix-melodies-in-the-browser-8ad5b42b4d0b)
