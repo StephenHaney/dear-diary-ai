@@ -3,7 +3,7 @@ import '@firebase/firestore';
 
 if (!firebase.apps.length) {
   var config = {
-    apiKey: 'AIzaSyBiE-sT0qnx-gFGtb-z4VbbTlEwpvxlK2k',
+    apiKey: process.env.firebase_browser_key,
     authDomain: 'deardiary-aeca1.firebaseapp.com',
     databaseURL: 'https://deardiary-aeca1.firebaseio.com',
     projectId: 'deardiary-aeca1',
