@@ -186,6 +186,12 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             firstKeyPressTime.current = Date.now();
           }
 
+          // If it's a silent key, bail out:
+          const shouldBeSilent = silentKeys[e.key];
+          if (shouldBeSilent === false || e.metaKey || e.ctrlKey || e.altKey) {
+            return;
+          }
+
           const dbKey: dbKeyPress = {
             type: 'key',
             key: e.key,
@@ -197,12 +203,6 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             // Add this key press to the list to be persisted at the next save event
             // The notes will get filled in before the persist happens
             unsavedPersists.current.push(dbKey);
-          }
-
-          // If it's a silent key, bail out:
-          const shouldBeSilent = silentKeys[e.key];
-          if (shouldBeSilent === false || e.metaKey || e.ctrlKey || e.altKey) {
-            return;
           }
 
           // If it's a chord key, play the chord:
