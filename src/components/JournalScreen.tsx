@@ -7,6 +7,7 @@ import * as Tone from 'tone';
 import throttle from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
 import { ShareAndAbout } from './ShareAndAbout';
+import { ProductHuntBadge } from './ProductHuntBadge';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -337,6 +338,8 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
       <Tree />
 
       <ShareAndAbout readonly={readonly} />
+
+      <ProductHuntBadge />
     </>
   );
 };
