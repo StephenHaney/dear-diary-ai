@@ -6,6 +6,12 @@ const BadgeWrapper = styled.div({
   top: '60px',
   right: '40px',
   display: 'none',
+  opacity: 0.5,
+  transition: 'opacity 0.5s ease-out',
+
+  '&:hover': {
+    opacity: 1,
+  },
 
   '@media (min-width: 1024px)': {
     display: 'block',
