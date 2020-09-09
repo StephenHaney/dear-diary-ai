@@ -339,7 +339,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
 
       <ShareAndAbout readonly={readonly} />
 
-      <ProductHuntBadge />
+      {/* <ProductHuntBadge /> */}
     </>
   );
 };
