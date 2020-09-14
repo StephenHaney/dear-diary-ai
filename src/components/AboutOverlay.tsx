@@ -18,10 +18,10 @@ export const bounceIn = keyframes`
 
 export const Modal = styled.div({
   backgroundColor: 'rgba(255, 255, 255, 0.9)',
-  maxWidth: 600,
-  maxHeight: '80vh',
+  maxWidth: 660,
   margin: 'auto',
-  top: '10vh',
+  top: '5vh',
+  maxHeight: '90vh',
   position: 'relative',
   padding: '50px 60px',
   borderRadius: 4,
@@ -31,6 +31,12 @@ export const Modal = styled.div({
   lineHeight: '32px',
   overflow: 'auto',
   animation: `${bounceIn} 1s ease`,
+  boxSizing: 'border-box',
+
+  '@media (min-width: 768px)': {
+    top: '10vh',
+    maxHeight: '80vh',
+  },
 });
 
 export const CloseButton = styled.button({
@@ -87,6 +93,9 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         </p>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           We created this for The BitRate: Remote Machine Learning & Music Series jam in our free time in August 2020.
+        </p>
+        <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
+          <a href="https://github.com/StephenHaney/dear-diary-ai">GitHub link (open source)</a>
         </p>
         <h2 style={{ marginTop: '50px' }}>Authors</h2>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
