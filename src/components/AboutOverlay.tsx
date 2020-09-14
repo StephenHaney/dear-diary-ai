@@ -95,7 +95,9 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
           We created this for The BitRate: Remote Machine Learning & Music Series jam in our free time in August 2020.
         </p>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
-          <a href="https://github.com/StephenHaney/dear-diary-ai">GitHub link (open source)</a>
+          <a href="https://github.com/StephenHaney/dear-diary-ai" target="_blank">
+            GitHub link (open source)
+          </a>
         </p>
         <h2 style={{ marginTop: '50px' }}>Authors</h2>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
