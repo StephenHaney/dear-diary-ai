@@ -24,7 +24,7 @@ export const BottomButton = styled.button({
 const Wrapper = styled.div({
   position: 'fixed',
   zIndex: 3,
-  bottom: 20,
+  bottom: 50,
   paddingLeft: '20',
   paddingRight: '20',
   textAlign: 'right',
@@ -32,6 +32,21 @@ const Wrapper = styled.div({
   flexWrap: 'wrap',
   justifyContent: 'space-around',
   '@media (min-width: 768px)': {
+    bottom: 40,
+    left: 60,
+  },
+});
+
+const PrivacyWrapper = styled.div({
+  position: 'fixed',
+  zIndex: 3,
+  bottom: 10,
+  paddingLeft: '10px',
+  width: '100%',
+  textAlign: 'center',
+  fontWeight: 'bold',
+  '@media (min-width: 768px)': {
+    textAlign: 'left',
     left: 60,
   },
 });
@@ -57,6 +72,13 @@ export const ShareAndAbout = ({ readonly }: Props) => {
 
         <BottomButton onClick={() => setAboutIsOpen(true)}>about</BottomButton>
       </Wrapper>
+
+      <PrivacyWrapper>
+        Entries are public to anyone with this URL.{' '}
+        <a href="/privacy" target="_blank">
+          Privacy info
+        </a>
+      </PrivacyWrapper>
     </>
   );
 };
