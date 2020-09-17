@@ -55,6 +55,22 @@ export const CloseButton = styled.button({
   },
 });
 
+const EmbedContainer = styled.div(`
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+
+  > iframe, > object, > embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+`);
+
 type Props = {
   setIsOpen: (isOpen: boolean) => void;
 };
@@ -84,16 +100,15 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
       <Modal>
         <h1 style={{ marginBottom: '40px' }}>Hello friend</h1>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
-          We hope to encourage awareness and peace through the act of writing a journal entry. To create a rewarding
-          experience, we use NLP to measure the mood of the writing and generate a unique melody for every story using
-          the Magenta MusicVAE ML model.
+          We created this for a ML & Music hackathon in our free time in August 2020.
         </p>
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
-          As you write, you build your own visual and musical story.
+          Watch how we created DearDiary.ai:
+          <EmbedContainer>
+            <iframe src="https://www.youtube.com/embed/GizCAuTnv98?rel=0" frameBorder="0" allowFullScreen></iframe>
+          </EmbedContainer>
         </p>
-        <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
-          We created this for The BitRate: Remote Machine Learning & Music Series jam in our free time in August 2020.
-        </p>
+
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           <a href="https://github.com/StephenHaney/dear-diary-ai" target="_blank">
             GitHub link (open source)
