@@ -32,7 +32,7 @@ const Wrapper = styled.div({
   flexWrap: 'wrap',
   justifyContent: 'space-around',
   '@media (min-width: 768px)': {
-    bottom: 40,
+    bottom: 30,
     left: 60,
   },
 });
@@ -44,6 +44,7 @@ const PrivacyWrapper = styled.div({
   paddingLeft: '10px',
   width: '100%',
   textAlign: 'center',
+  color: '#555',
   fontWeight: 'bold',
   '@media (min-width: 768px)': {
     textAlign: 'left',
