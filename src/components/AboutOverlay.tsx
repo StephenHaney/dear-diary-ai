@@ -105,7 +105,7 @@ export const AboutOverlay = ({ setIsOpen }: Props) => {
         <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
           Watch how we created DearDiary.ai:
           <EmbedContainer>
-            <iframe src="https://www.youtube.com/embed/GizCAuTnv98?rel=0" frameborder="0" allowfullscreen></iframe>
+            <iframe src="https://www.youtube.com/embed/GizCAuTnv98?rel=0" frameBorder="0" allowFullScreen></iframe>
           </EmbedContainer>
         </p>
 
