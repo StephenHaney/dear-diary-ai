@@ -141,6 +141,9 @@ const EntryPlayback = () => {
                       sampler.current!.triggerAttackRelease([note.note], note.duration, undefined, note.velocity);
                     }, note.delayFromKeyPress);
                   }
+
+                  // Keep the textarea scrolled all the way down
+                  textArea.scrollTop = textArea.scrollHeight;
                 }, playTime);
               }
             }

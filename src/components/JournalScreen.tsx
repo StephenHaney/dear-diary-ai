@@ -8,6 +8,7 @@ import throttle from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
 import { ShareAndAbout } from './ShareAndAbout';
 import { ProductHuntBadge } from './ProductHuntBadge';
+import styled from '@emotion/styled';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -59,6 +60,29 @@ const chordKeys: Record<string, Array<chord>> = {
   '!': [chords.Cmaj9, chords.Am7],
   '?': [chords.Cmaj7NoRoot],
 };
+
+const JournalTextArea = styled.textarea({
+  position: 'relative',
+  zIndex: 3,
+  boxSizing: 'border-box',
+  height: 'calc(100vh - 160px)',
+  width: '100%',
+  maxWidth: '700px',
+  fontSize: '33px',
+  border: 0,
+  resize: 'none',
+  outline: 'none',
+  color: '#333',
+  paddingTop: '60px',
+  paddingBottom: '60px',
+  paddingLeft: '60px',
+  paddingRight: '30px',
+  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+
+  '@media (min-width: 768px)': {
+    height: 'calc(100vh - 100px)',
+  },
+});
 
 type Props = {
   readonly?: boolean;
@@ -123,29 +147,11 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
 
   return (
     <>
-      <textarea
+      <JournalTextArea
         spellCheck="false"
         autoFocus={true}
         readOnly={readonly}
         disabled={readonly}
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          boxSizing: 'border-box',
-          height: '99vh',
-          width: '100%',
-          maxWidth: '700px',
-          fontSize: '33px',
-          border: 0,
-          resize: 'none',
-          outline: 'none',
-          color: '#333',
-          paddingTop: '60px',
-          paddingBottom: '60px',
-          paddingLeft: '60px',
-          paddingRight: '30px',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        }}
         onSelect={(e) => {
           if (!readonly) {
             const textarea = e.currentTarget;
@@ -340,7 +346,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             noteIndex.current = 0;
           }
         }}
-      ></textarea>
+      ></JournalTextArea>
 
       <Tree />
 
