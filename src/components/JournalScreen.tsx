@@ -71,6 +71,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
   const lastNotePlayed = useRef('C3');
 
   const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
+  const lastSelectionWasAtLength = useRef(true);
   const firstKeyPressTime = useRef(0);
   const currentSentiment = useRef(0.5);
 
@@ -152,8 +153,14 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             const selectionEnd = textarea.selectionEnd;
 
             if (selectionStart === selectionEnd && selectionStart === textarea.textLength) {
-              // Bail if the selection is at the end, which will happen automatically
-              return;
+              // Bail if the selection is at the end, and the previous selection was at the end
+              // We don't need this info as it will happen automatically and we can save some space
+              if (lastSelectionWasAtLength.current === true) {
+                return;
+              }
+              lastSelectionWasAtLength.current = true;
+            } else {
+              lastSelectionWasAtLength.current = false;
             }
 
             // Add this key press to the list to be persisted at the next save event
