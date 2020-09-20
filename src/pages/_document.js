@@ -38,13 +38,16 @@ class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/css2?family=Lora:wght@432&display=swap" rel="stylesheet" />
 
           <style>{`
+            html, body {
+              height: '100%',
+              maxHeight: '100%',
+            }
+
             body {
               margin: 0;
               overscroll-behavior: none;
               font-family: Lora;
               width: 100vw;
-              height: 100vh;
-              maxHeight: 100vh;
               overflow: 'hidden',
             }
 
