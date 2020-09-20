@@ -8,6 +8,7 @@ import throttle from 'lodash.debounce';
 import { persistKeys, dbSelectionEvent, dbKeyPress } from '../firebase/persistKeys';
 import { ShareAndAbout } from './ShareAndAbout';
 import { ProductHuntBadge } from './ProductHuntBadge';
+import styled from '@emotion/styled';
 
 const allNotes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -60,6 +61,29 @@ const chordKeys: Record<string, Array<chord>> = {
   '?': [chords.Cmaj7NoRoot],
 };
 
+const JournalTextArea = styled.textarea({
+  position: 'relative',
+  zIndex: 3,
+  boxSizing: 'border-box',
+  height: 'calc(100vh - 160px)',
+  width: '100%',
+  maxWidth: '700px',
+  fontSize: '33px',
+  border: 0,
+  resize: 'none',
+  outline: 'none',
+  color: '#333',
+  paddingTop: '60px',
+  paddingBottom: '60px',
+  paddingLeft: '60px',
+  paddingRight: '30px',
+  backgroundColor: 'rgba(255, 255, 255, 0.5)',
+
+  '@media (min-width: 768px)': {
+    height: 'calc(100vh - 100px)',
+  },
+});
+
 type Props = {
   readonly?: boolean;
   sampler: Tone.Sampler;
@@ -71,6 +95,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
   const lastNotePlayed = useRef('C3');
 
   const unsavedPersists = useRef<Array<dbKeyPress | dbSelectionEvent>>([]);
+  const lastSelectionWasAtLength = useRef(true);
   const firstKeyPressTime = useRef(0);
   const currentSentiment = useRef(0.5);
 
@@ -122,29 +147,11 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
 
   return (
     <>
-      <textarea
+      <JournalTextArea
         spellCheck="false"
         autoFocus={true}
         readOnly={readonly}
         disabled={readonly}
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          boxSizing: 'border-box',
-          height: '99vh',
-          width: '100%',
-          maxWidth: '700px',
-          fontSize: '33px',
-          border: 0,
-          resize: 'none',
-          outline: 'none',
-          color: '#333',
-          paddingTop: '60px',
-          paddingBottom: '60px',
-          paddingLeft: '60px',
-          paddingRight: '30px',
-          backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        }}
         onSelect={(e) => {
           if (!readonly) {
             const textarea = e.currentTarget;
@@ -152,8 +159,14 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             const selectionEnd = textarea.selectionEnd;
 
             if (selectionStart === selectionEnd && selectionStart === textarea.textLength) {
-              // Bail if the selection is at the end, which will happen automatically
-              return;
+              // Bail if the selection is at the end, and the previous selection was at the end
+              // We don't need this info as it will happen automatically and we can save some space
+              if (lastSelectionWasAtLength.current === true) {
+                return;
+              }
+              lastSelectionWasAtLength.current = true;
+            } else {
+              lastSelectionWasAtLength.current = false;
             }
 
             // Add this key press to the list to be persisted at the next save event
@@ -333,7 +346,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
             noteIndex.current = 0;
           }
         }}
-      ></textarea>
+      ></JournalTextArea>
 
       <Tree />
 

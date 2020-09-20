@@ -88,16 +88,25 @@ const EntryPlayback = () => {
       setTimeout(() => {
         loadingCoverRef.current!.style.display = 'none';
 
-        // FIX
         setTimeout(() => {
           let lastKeyTime = 0;
+          let runningSquish = 0;
           // Don't do this, just moving fast for the JAM! Use a ref
           const textArea = document.querySelector('textarea');
 
           if (textArea && entryData!.events) {
+            // Keep track of "squished" time we remove from big gaps
             for (const [time, event] of Object.entries(entryData!.events)) {
+              // Adjust the playtime for any time we've skipped earlier
+              let playTime = parseInt(time) - runningSquish;
               // If there's more than 1 second between notes, squish it down to 1s:
-              const playTime = parseInt(time) - lastKeyTime > 1000 ? lastKeyTime + 1000 : parseInt(time);
+              const timeGap = playTime - lastKeyTime;
+              if (timeGap > 1000) {
+                // say it's 2500 time gap
+                const timeSkipped = timeGap - 1000; // skipping "1500" in this example
+                runningSquish += timeSkipped; // add 1500 to running squish
+                playTime = playTime - timeSkipped; // adjust the playtime 1500 sooner
+              }
               lastKeyTime = playTime;
 
               if (persistEventIsSelection(event)) {
@@ -115,6 +124,7 @@ const EntryPlayback = () => {
                       textArea.setSelectionRange(textArea.selectionStart - 1, textArea.selectionEnd);
                     }
                     textArea.setRangeText('');
+                    textArea.setSelectionRange(textArea.value.length, textArea.value.length);
                   } else if (keychar === 'Enter') {
                     // Fake enter key value:
                     textArea.setRangeText(`\r\n`);
@@ -131,6 +141,9 @@ const EntryPlayback = () => {
                       sampler.current!.triggerAttackRelease([note.note], note.duration, undefined, note.velocity);
                     }, note.delayFromKeyPress);
                   }
+
+                  // Keep the textarea scrolled all the way down
+                  textArea.scrollTop = textArea.scrollHeight;
                 }, playTime);
               }
             }
