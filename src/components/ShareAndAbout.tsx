@@ -14,6 +14,8 @@ export const BottomButton = styled.button({
   borderRadius: 3,
   cursor: 'pointer',
   margin: 10,
+  marginTop: 0,
+  backgroundColor: '#fff',
   transition: 'transform 1s ease-out, color 1s ease-out',
   '&:hover': {
     transform: 'scale(1.04)',
@@ -41,7 +43,6 @@ const PrivacyWrapper = styled.div({
   position: 'fixed',
   zIndex: 3,
   bottom: 10,
-  paddingLeft: '10px',
   width: '100%',
   textAlign: 'center',
   color: '#555',
@@ -49,6 +50,8 @@ const PrivacyWrapper = styled.div({
   '@media (min-width: 768px)': {
     textAlign: 'left',
     left: 60,
+    paddingLeft: '10px',
+    paddingRight: '10px',
   },
 });
 

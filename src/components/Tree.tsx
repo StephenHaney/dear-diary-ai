@@ -4,7 +4,7 @@ export const Tree = () => {
   return (
     <div
       style={{
-        position: 'absolute',
+        position: 'fixed',
         bottom: 0,
         right: '5%',
         width: '100%',
