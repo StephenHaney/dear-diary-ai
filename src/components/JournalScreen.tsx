@@ -65,7 +65,7 @@ const JournalTextArea = styled.textarea({
   position: 'relative',
   zIndex: 3,
   boxSizing: 'border-box',
-  height: 'calc(100vh - 160px)',
+  height: 'calc(100vh - 180px)',
   width: '100%',
   maxWidth: '700px',
   fontSize: '33px',
@@ -75,12 +75,16 @@ const JournalTextArea = styled.textarea({
   color: '#333',
   paddingTop: '60px',
   paddingBottom: '60px',
-  paddingLeft: '60px',
-  paddingRight: '30px',
+  paddingLeft: '20px',
+  paddingRight: '20px',
   backgroundColor: 'rgba(255, 255, 255, 0.5)',
 
   '@media (min-width: 768px)': {
-    height: 'calc(100vh - 100px)',
+    height: 'calc(100vh - 110px)',
+    paddingTop: '60px',
+    paddingBottom: '60px',
+    paddingLeft: '60px',
+    paddingRight: '30px',
   },
 });
 

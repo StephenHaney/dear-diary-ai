@@ -43,12 +43,12 @@ export const ShareOverlay = ({ setIsOpen }: Props) => {
               const button = e.currentTarget;
               button.innerText = 'Copied';
               setTimeout(() => {
-                button.innerText = 'Copy playback link';
+                button.innerText = 'Copy link';
               }, 1700);
             }}
-            style={{ marginLeft: 0, width: 233 }}
+            style={{ marginLeft: 0, width: 160 }}
           >
-            Copy playback link
+            Copy link
           </BottomButton>
         </div>
 
