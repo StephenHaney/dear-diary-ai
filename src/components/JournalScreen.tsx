@@ -205,7 +205,7 @@ const JournalScreen = ({ readonly = false, sampler }: Props) => {
           }
 
           // Bail early for OS key combos
-          if (e.metaKey || e.ctrlKey || e.altKey) {
+          if (e.metaKey || e.ctrlKey) {
             return;
           }
 
