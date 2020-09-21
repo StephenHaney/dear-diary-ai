@@ -124,7 +124,6 @@ const EntryPlayback = () => {
                       textArea.setSelectionRange(textArea.selectionStart - 1, textArea.selectionEnd);
                     }
                     textArea.setRangeText('');
-                    textArea.setSelectionRange(textArea.value.length, textArea.value.length);
                   } else if (keychar === 'Enter') {
                     // Fake enter key value:
                     textArea.setRangeText(`\r\n`);
