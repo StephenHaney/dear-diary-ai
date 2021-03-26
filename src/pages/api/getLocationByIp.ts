@@ -11,5 +11,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await fetch(locationDataUrl, { method: 'get', headers: { 'User-Agent': 'keycdn-tools:https://deardiary.ai' } })
   ).json();
   // Return the location json:
-  res.status(200).json(locationData.data.geo);
+  res.status(200).json(locationData?.data?.geo || { ip: 'not found' });
 };
