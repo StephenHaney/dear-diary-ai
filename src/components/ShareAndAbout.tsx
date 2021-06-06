@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AboutOverlay } from './AboutOverlay';
 import styled from '@emotion/styled';
 import { ShareOverlay } from './ShareOverlay';
+import { HistoryOverlay } from './HistoryOverlay';
 
 export const BottomButton = styled.button({
   border: '3px solid rgba(0, 0, 0, 0.6)',
@@ -61,20 +62,24 @@ type Props = {
 export const ShareAndAbout = ({ readonly }: Props) => {
   const [aboutIsOpen, setAboutIsOpen] = useState(false);
   const [shareIsOpen, setShareIsOpen] = useState(false);
+  const [historyIsOpen, setHistoryIsOpen] = useState(false);
 
   return (
     <>
       {aboutIsOpen && <AboutOverlay setIsOpen={setAboutIsOpen} />}
       {shareIsOpen && <ShareOverlay setIsOpen={setShareIsOpen} />}
+      {historyIsOpen && <HistoryOverlay setIsOpen={setHistoryIsOpen} />}
 
       <Wrapper>
-        <BottomButton onClick={() => (window.location.href = '/?write')}>NEW</BottomButton>
+        <BottomButton onClick={() => (window.location.href = '/?write')}>New</BottomButton>
 
-        <BottomButton onClick={() => window.location.reload()}>REPLAY</BottomButton>
+        <BottomButton onClick={() => window.location.reload()}>Replay</BottomButton>
 
-        <BottomButton onClick={() => setShareIsOpen(true)}>SHARE</BottomButton>
+        <BottomButton onClick={() => setShareIsOpen(true)}>Share</BottomButton>
 
-        <BottomButton onClick={() => setAboutIsOpen(true)}>about</BottomButton>
+        <BottomButton onClick={() => setAboutIsOpen(true)}>About</BottomButton>
+
+        <BottomButton onClick={() => setHistoryIsOpen(true)}>View saved</BottomButton>
       </Wrapper>
 
       <PrivacyWrapper>

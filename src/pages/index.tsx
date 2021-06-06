@@ -2,7 +2,7 @@ import Head from 'next/head';
 import dynamic from 'next/dynamic';
 import { useRef, useEffect, useState } from 'react';
 import '../firebase/initFirebase';
-import { generateEntry } from '../firebase/createEntry';
+import { generateEntry, getLocalEntries } from '../firebase/createEntry';
 import { useRouter } from 'next/router';
 import * as Tone from 'tone';
 import styled from '@emotion/styled';
@@ -126,7 +126,12 @@ export default function Home() {
         document.querySelector('textarea')?.focus();
       }, 550);
 
-      generateEntry().then((newId) => {
+      generateEntry().then((entry) => {
+        const entries = getLocalEntries();
+        const newId = entry.id;
+        entries.push(entry);
+        localStorage.setItem("entries", JSON.stringify(entries));
+        console.log(localStorage.getItem("entries"));
         history.replaceState({ entryId: newId }, 'New entry', `entry/${newId}`);
       });
     });

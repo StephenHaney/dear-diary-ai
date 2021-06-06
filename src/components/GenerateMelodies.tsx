@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { MusicVAE, INoteSequence, sequences } from '@magenta/music/es6';
-import { toMidi } from './utils/midiHelpers';
 
 const MidiConvert = () => {
   useEffect(() => {

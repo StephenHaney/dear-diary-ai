@@ -1,11 +1,16 @@
 import React from 'react';
 import { BottomButton } from './ShareAndAbout';
 import { CloseButton, Modal } from './AboutOverlay';
+import { getLocalEntries } from '../firebase/createEntry';
 
 type Props = {
   setIsOpen: (isOpen: boolean) => void;
 };
-export const ShareOverlay = ({ setIsOpen }: Props) => {
+export const HistoryOverlay = ({ setIsOpen }: Props) => {
+  const entries = getLocalEntries().reverse();
+  const listItems = entries.map((entry) =>
+    <li><a href={entry.id}>{entry.id}</a> (Created: {(new Date(entry.entry.created)).toLocaleDateString() + " " + (new Date(entry.entry.created)).toLocaleTimeString()})</li>
+  );
   return (
     <div
       style={{
@@ -29,45 +34,9 @@ export const ShareOverlay = ({ setIsOpen }: Props) => {
       }}
     >
       <Modal>
-        <h1 style={{ marginBottom: '40px' }}>Share your song</h1>
-        <p style={{ fontFamily: 'San Francisco, Arial, sans serif' }}>
-          Thanks for sharing your art! You can copy the link out of the address bar or use one of these links below.
-        </p>
+        <h1 style={{ marginBottom: '40px' }}>Your songs</h1>
 
-        <p>Whoever you send it to will see your words play back in real time.</p>
-
-        <div style={{ position: 'relative', display: 'inline-block' }}>
-          <BottomButton
-            onClick={(e) => {
-              navigator.clipboard.writeText(window.location.href);
-              const button = e.currentTarget;
-              button.innerText = 'Copied';
-              setTimeout(() => {
-                button.innerText = 'Copy link';
-              }, 1700);
-            }}
-            style={{ marginLeft: 0, width: 160 }}
-          >
-            Copy link
-          </BottomButton>
-        </div>
-
-        <BottomButton
-          onClick={() =>
-            window.open(
-              `https://twitter.com/intent/tweet?text=This%20app%20makes%20music%20out%20of%20your%20journal%20entry,%20so%20cool!%20Check%20out%20mine%20and%20make%20yours%20too%20${window.location.href}`
-            )
-          }
-        >
-          Tweet
-        </BottomButton>
-
-        <BottomButton
-          onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`)}
-        >
-          Facebook
-        </BottomButton>
-
+        <ul>{listItems}</ul>
         <CloseButton onClick={() => setIsOpen(false)}>
           <svg
             style={{ transform: 'scale(2)' }}
