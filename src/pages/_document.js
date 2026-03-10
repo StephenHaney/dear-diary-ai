@@ -16,7 +16,7 @@ class MyDocument extends Document {
 
           <meta property="og:title" content="Dear Diary AI" />
           <meta property="og:type" content="website" />
-          <meta property="og:image" content="https://deardiary.ai/complete-tree.png" />
+          <meta property="og:image" content="https://dear-diary-ai.vercel.app/complete-tree.png" />
           <meta
             property="og:description"
             content="Find awareness and peace through the act of writing a journal entry. Our AI will write a song for you based on your writing."
@@ -31,7 +31,7 @@ class MyDocument extends Document {
             content="Find awareness and peace through the act of writing a journal entry. Our AI will write a song for you based
             on your writing."
           />
-          <meta name="twitter:image" content=" https://deardiary.ai/complete-tree.png" />
+          <meta name="twitter:image" content=" https://dear-diary-ai.vercel.app/complete-tree.png" />
           <meta name="twitter:card" content="summary_large_image" />
 
           <link rel="icon" href="/favicon.png" />

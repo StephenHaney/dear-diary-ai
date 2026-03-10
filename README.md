@@ -1,12 +1,12 @@
 # Turn your journal into music
 
-## [DearDiary.ai](https://deardiary.ai/)
+## [DearDiary.ai](https://dear-diary-ai.vercel.app/)
 
 ### **Breaking news –** We are honored to be a winning project in the [Magenta and Gray Area ML and music hackathon](https://bitrate.devpost.com/project-gallery)!
 
 ---
 
-<img src="https://deardiary.ai/complete-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
+<img src="https://dear-diary-ai.vercel.app/complete-tree.png" width="400" alt="Illustration of a peaceful tree, leaning to the left, with birds flying away" />
 
 ## Why use it?
 
@@ -83,7 +83,7 @@ We save entries using Google Firestore for realtime persistence so that users ca
 
 - Stephen Haney – https://twitter.com/sdothaney
 - Suyash Joshi – https://twitter.com/suyashcjoshi
-- Devin Lane – https://twitter.com/gentle_return
+- Devin Lane – https://bsky.app/profile/devinlane.com
 
 ### Prior art:
 
